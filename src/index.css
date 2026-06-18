@@ -1,0 +1,133 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Outfit", "Inter", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+/* Custom smooth animations & scrollbars */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: #f8fafc;
+  color: #0f172a;
+}
+
+/* Wire and electron animation classes for the interactive Kirchhoff diagram */
+@keyframes flow-conventional {
+  to {
+    stroke-dashoffset: -40;
+  }
+}
+
+@keyframes flow-electrons {
+  to {
+    stroke-dashoffset: 40;
+  }
+}
+
+.wire-flow {
+  fill: none;
+  stroke: #3b82f6; /* Blue for conventional current */
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-dasharray: 8, 12;
+  animation: flow-conventional var(--flow-speed, 1.2s) linear infinite;
+  opacity: 0.8;
+  filter: drop-shadow(0 0 3px rgba(59, 130, 246, 0.5));
+}
+
+.wire-flow.electrons {
+  stroke: #ef4444; /* Red/Orange for real electron flow */
+  animation: flow-electrons var(--flow-speed, 1.2s) linear infinite;
+  filter: drop-shadow(0 0 3px rgba(239, 68, 68, 0.5));
+}
+
+.wire-flow.zero-current {
+  animation: none !important;
+  opacity: 0.15;
+  stroke: #64748b;
+  filter: none;
+}
+
+.wire-base {
+  fill: none;
+  stroke: #1e293b;
+  stroke-width: 6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.resistor-path {
+  fill: none;
+  stroke: #1e293b;
+  stroke-width: 3.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.interactive-resistor {
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.interactive-resistor:hover .resistor-bg {
+  fill: rgba(79, 70, 229, 0.08);
+  stroke: #4f46e5;
+  stroke-width: 1px;
+}
+
+.interactive-resistor.selected .resistor-bg {
+  fill: rgba(79, 70, 229, 0.15);
+  stroke: #4f46e5;
+  stroke-width: 2px;
+}
+
+.resistor-bg {
+  fill: transparent;
+  stroke: transparent;
+  stroke-width: 1;
+  rx: 8px;
+}
+
+/* Tutorial highlighting effects */
+.highlight-series {
+  filter: drop-shadow(0 0 10px rgba(245, 158, 11, 0.8));
+}
+.highlight-series .resistor-path {
+  stroke: #f59e0b !important;
+  stroke-width: 5px;
+}
+.highlight-series .wire-base {
+  stroke: #f59e0b !important;
+  stroke-width: 8px;
+}
+
+.highlight-parallel {
+  filter: drop-shadow(0 0 10px rgba(16, 185, 129, 0.8));
+}
+.highlight-parallel .resistor-path {
+  stroke: #10b981 !important;
+  stroke-width: 5px;
+}
+.highlight-parallel .wire-base {
+  stroke: #10b981 !important;
+  stroke-width: 8px;
+}
+
+.highlight-active {
+  filter: drop-shadow(0 0 10px rgba(99, 102, 241, 0.8));
+}
+.highlight-active .resistor-path {
+  stroke: #6366f1 !important;
+  stroke-width: 5px;
+}
+.highlight-active .wire-base {
+  stroke: #6366f1 !important;
+  stroke-width: 8px;
+}
