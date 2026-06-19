@@ -6,18 +6,23 @@ import { Zap, Cpu, Layers, BookOpen, ExternalLink, HelpCircle, Activity } from "
 
 type SimulatorType = "metal" | "circuito" | "kirchhoff" | null;
 
+let hasIncremented = false;
+
 export default function App() {
   const [simuladorActivo, setSimuladorActivo] = useState<SimulatorType>(null);
   const [visitas, setVisitas] = useState<number>(1);
 
   useEffect(() => {
     const totalVisits = localStorage.getItem("fisica_ii_lab_visitas");
-    let currentVisits = 1;
-    if (totalVisits) {
-      currentVisits = parseInt(totalVisits, 10) + 1;
+    let currentVisits = totalVisits ? parseInt(totalVisits, 10) : 0;
+    
+    if (!hasIncremented) {
+      currentVisits += 1;
+      localStorage.setItem("fisica_ii_lab_visitas", currentVisits.toString());
+      hasIncremented = true;
     }
-    localStorage.setItem("fisica_ii_lab_visitas", currentVisits.toString());
-    setVisitas(currentVisits);
+    
+    setVisitas(currentVisits || 1);
   }, []);
 
   const volverAlMenu = () => {
@@ -44,19 +49,21 @@ export default function App() {
       <div className="absolute bottom-0 right-1/4 w-[35rem] h-[35rem] bg-violet-600/10 rounded-full blur-[120px] pointer-events-none"></div>
 
       <div className="flex-1 w-full max-w-7xl mx-auto px-6 py-12 md:py-20 flex flex-col justify-center space-y-12 md:space-y-16 relative z-10">
-
+        
         {/* Core display heading */}
         <section className="text-center space-y-4 max-w-2xl mx-auto">
           <div className="flex flex-wrap justify-center items-center gap-2.5">
-
+            <div className="inline-flex items-center gap-2 bg-indigo-500/10 border border-indigo-500/25 px-4 py-1.5 rounded-full text-indigo-400 font-display font-bold text-xs tracking-wider uppercase shadow-inner">
+              <Activity className="w-3.5 h-3.5 animate-pulse" /> Laboratorios Interactivos de Física II
+            </div>
             <div className="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/25 px-4 py-1.5 rounded-full text-emerald-400 font-display font-extrabold text-[10px] sm:text-xs tracking-wider uppercase shadow-inner select-none transition-all hover:bg-emerald-500/15">
               <span>👁️ Visitas Totales:</span>
               <span className="font-mono bg-emerald-500/20 text-emerald-300 px-1.5 py-0.5 rounded font-black">{visitas}</span>
             </div>
           </div>
-
+          
           <h1 className="font-display font-black text-4xl m-0 sm:text-5xl leading-tight tracking-tight text-white drop-shadow-sm">
-            Física II: Unidad Tematica 4 Electrodinámica
+            Física II: Guía de Electromagnetismo
           </h1>
           <p className="text-slate-400 text-sm md:text-base leading-relaxed font-medium">
             Plataforma virtual para el aprendizaje intuitivo de tres problemas complejos de mallas, resistencias y comportamiento atómico de conductores de manera visual.
@@ -65,9 +72,9 @@ export default function App() {
 
         {/* Triple choice grid cards */}
         <section className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-
+          
           {/* Card 1: Metal conduction sim */}
-          <div
+          <div 
             onClick={() => setSimuladorActivo("metal")}
             className="group relative bg-slate-950 border border-slate-800 hover:border-slate-700/80 rounded-3xl p-6 transition-all duration-300 cursor-pointer hover:shadow-2xl hover:shadow-indigo-500/5 hover:-translate-y-1 flex flex-col justify-between"
           >
@@ -89,7 +96,7 @@ export default function App() {
                 <li className="flex items-center gap-2">✓ Notación científica interactiva</li>
               </ul>
             </div>
-            <button
+            <button 
               className="mt-6 w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs uppercase tracking-widest rounded-xl transition-colors font-display"
               onClick={() => setSimuladorActivo("metal")}
             >
@@ -98,7 +105,7 @@ export default function App() {
           </div>
 
           {/* Card 2: Simple Resonator Sim */}
-          <div
+          <div 
             onClick={() => setSimuladorActivo("circuito")}
             className="group relative bg-slate-950 border border-slate-800 hover:border-slate-700/80 rounded-3xl p-6 transition-all duration-300 cursor-pointer hover:shadow-2xl hover:shadow-indigo-500/5 hover:-translate-y-1 flex flex-col justify-between"
           >
@@ -120,7 +127,7 @@ export default function App() {
                 <li className="flex items-center gap-2">✓ Animación de velocidad de corriente</li>
               </ul>
             </div>
-            <button
+            <button 
               className="mt-6 w-full py-3 bg-violet-600 hover:bg-violet-500 text-white font-bold text-xs uppercase tracking-widest rounded-xl transition-colors font-display"
               onClick={() => setSimuladorActivo("circuito")}
             >
@@ -129,7 +136,7 @@ export default function App() {
           </div>
 
           {/* Card 3: Kirchhoff sim */}
-          <div
+          <div 
             onClick={() => setSimuladorActivo("kirchhoff")}
             className="group relative bg-slate-950 border border-slate-800 hover:border-slate-700/80 rounded-3xl p-6 transition-all duration-300 cursor-pointer hover:shadow-2xl hover:shadow-indigo-500/5 hover:-translate-y-1 flex flex-col justify-between"
           >
@@ -151,7 +158,7 @@ export default function App() {
                 <li className="flex items-center gap-2">✓ Visualizador de potencial Vb - Va</li>
               </ul>
             </div>
-            <button
+            <button 
               className="mt-6 w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs uppercase tracking-widest rounded-xl transition-colors font-display"
               onClick={() => setSimuladorActivo("kirchhoff")}
             >
@@ -162,18 +169,18 @@ export default function App() {
         </section>
 
         {/* Global info card */}
-        {/* <section className="bg-slate-950/50 border border-slate-800/80 p-5 rounded-2xl flex items-center gap-4">
+        <section className="bg-slate-950/50 border border-slate-800/80 p-5 rounded-2xl flex items-center gap-4">
           <BookOpen className="w-6 h-6 text-indigo-400 flex-shrink-0" />
           <p className="text-slate-400 hover:text-slate-300 transition-colors text-xs leading-relaxed">
             🎓 <strong>Nota para docentes y alumnos:</strong> Cada módulo incluye controles enriquecidos, soporte de cambio de flujo entre corriente tradicional y electrónica física real, y verificación matemática paso a paso interactiva adaptada al programa de Ingeniería Física II.
           </p>
-        </section> */}
+        </section>
 
       </div>
 
       {/* Footer */}
       <footer className="border-t border-slate-800 py-6 text-center text-slate-500 text-[10px] tracking-wider font-semibold bg-slate-950 uppercase">
-        U.T.N. FRRe. - Física II • {new Date().getFullYear()}
+        Laboratorio de simulaciones virtuales física II v1.2.0 • {new Date().getFullYear()}
       </footer>
     </div>
   );
