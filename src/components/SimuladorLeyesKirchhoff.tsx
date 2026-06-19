@@ -176,7 +176,7 @@ export default function SimuladorLeyesKirchhoff({ volverAlMenu }: SimuladorLeyes
       <header className="bg-slate-900 border-b border-slate-800 text-white px-6 py-5 sticky top-0 z-30 shadow-md">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <button 
+            <button
               onClick={volverAlMenu}
               className="group flex items-center gap-2 bg-slate-800/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 hover:border-slate-600 px-4 py-2 rounded-xl transition-all cursor-pointer font-medium text-sm"
             >
@@ -188,7 +188,7 @@ export default function SimuladorLeyesKirchhoff({ volverAlMenu }: SimuladorLeyes
                 Simulador: Leyes de Kirchhoff (Mallas)
               </h1>
               <p className="text-slate-400 text-xs mt-0.5 font-medium">
-                Análisis de Redes Eléctricas Complejas con 3 Fuentes · Problema G4P9
+                Problema G4P9
               </p>
             </div>
           </div>
@@ -387,7 +387,7 @@ export default function SimuladorLeyesKirchhoff({ volverAlMenu }: SimuladorLeyes
                   ))}
                 </div>
 
-                <button 
+                <button
                   className="mt-auto bg-slate-900 shadow text-white font-bold py-2 rounded-xl text-xs cursor-pointer border-none hover:bg-slate-800 transition-all"
                   onClick={() => setSelectedResistor(null)}
                 >
@@ -401,7 +401,7 @@ export default function SimuladorLeyesKirchhoff({ volverAlMenu }: SimuladorLeyes
                 <p className="text-xs">
                   Haz clic directamente sobre cualquier <strong>resistencia o cualquiera de las 3 baterías</strong> para cambiar su potencial o ver su comportamiento físico.
                 </p>
-                <button 
+                <button
                   onClick={resetValues}
                   className="mt-4 flex items-center justify-center gap-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 py-1.5 px-4 rounded-xl text-xs font-bold cursor-pointer transition-all border-none"
                 >
@@ -451,7 +451,7 @@ export default function SimuladorLeyesKirchhoff({ volverAlMenu }: SimuladorLeyes
 
         {/* Step-by-step math solver layout card */}
         <section className="bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden">
-          <div 
+          <div
             onClick={() => setMostrarPasos(!mostrarPasos)}
             className="flex items-center justify-between p-5 cursor-pointer bg-slate-50 hover:bg-slate-100/50 transition-colors select-none"
           >
@@ -473,13 +473,13 @@ export default function SimuladorLeyesKirchhoff({ volverAlMenu }: SimuladorLeyes
               <div className="space-y-3 font-mono text-xs">
                 <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
                   <h4 className="font-extrabold text-slate-800 text-xs mb-1.5">Malla I (Izquierda)</h4>
-                  <code>-I₀·(R₁ + R₄) + I₁·R₃ = E₂ - E₁</code><br/>
+                  <code>-I₀·(R₁ + R₄) + I₁·R₃ = E₂ - E₁</code><br />
                   <span>-I₀·({R14}) + I₁·{R3} = {e2 - e1} V</span>
                 </div>
 
                 <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
                   <h4 className="font-extrabold text-slate-800 text-xs mb-1.5">Malla II (Derecha)</h4>
-                  <code>-I₀·(R₂ + R₅) - I₁·(R₃ + R₂ + R₅) = -(E₂ + E₃)</code><br/>
+                  <code>-I₀·(R₂ + R₅) - I₁·(R₃ + R₂ + R₅) = -(E₂ + E₃)</code><br />
                   <span>-I₀·({R25}) - I₁·({R3 + R25}) = -{e2 + e3} V</span>
                 </div>
 
