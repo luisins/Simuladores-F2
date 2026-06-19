@@ -306,7 +306,7 @@ export default function SimuladorCircuitos({ volverAlMenu }: SimuladorCircuitosP
       <header className="bg-slate-900 border-b border-slate-800 text-white px-6 py-5 sticky top-0 z-30 shadow-md">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <button 
+            <button
               onClick={volverAlMenu}
               className="group flex items-center gap-2 bg-slate-800/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 hover:border-slate-600 px-4 py-2 rounded-xl transition-all cursor-pointer font-medium text-sm"
             >
@@ -327,7 +327,7 @@ export default function SimuladorCircuitos({ volverAlMenu }: SimuladorCircuitosP
               onClick={() => setMostrarManual(true)}
               className="flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2 px-5 rounded-xl cursor-pointer shadow-md shadow-indigo-600/10 transition-colors text-xs border border-indigo-500"
             >
-              <BookOpen className="w-4 h-4" /> Guía Práctica de Uso
+              <BookOpen className="w-4 h-4" /> Manual de Uso
             </button>
             <button
               onClick={restablecerValores}
@@ -350,11 +350,10 @@ export default function SimuladorCircuitos({ volverAlMenu }: SimuladorCircuitosP
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <button
               onClick={() => { setCircuitoActivo("a"); setPasoActual(0); setSelectedResistor(null); }}
-              className={`p-5 rounded-2xl border text-left cursor-pointer transition-all flex flex-col justify-between ${
-                circuitoActivo === "a"
-                  ? "border-indigo-600 bg-indigo-50/20 shadow-md shadow-indigo-600/5"
-                  : "border-slate-200 hover:border-slate-300 bg-white"
-              }`}
+              className={`p-5 rounded-2xl border text-left cursor-pointer transition-all flex flex-col justify-between ${circuitoActivo === "a"
+                ? "border-indigo-600 bg-indigo-50/20 shadow-md shadow-indigo-600/5"
+                : "border-slate-200 hover:border-slate-300 bg-white"
+                }`}
             >
               <div>
                 <span className="text-2xl mb-1 block">🔷</span>
@@ -367,11 +366,10 @@ export default function SimuladorCircuitos({ volverAlMenu }: SimuladorCircuitosP
 
             <button
               onClick={() => { setCircuitoActivo("b"); setPasoActual(0); setSelectedResistor(null); }}
-              className={`p-5 rounded-2xl border text-left cursor-pointer transition-all flex flex-col justify-between ${
-                circuitoActivo === "b"
-                  ? "border-indigo-600 bg-indigo-50/20 shadow-md shadow-indigo-600/5"
-                  : "border-slate-200 hover:border-slate-300 bg-white"
-              }`}
+              className={`p-5 rounded-2xl border text-left cursor-pointer transition-all flex flex-col justify-between ${circuitoActivo === "b"
+                ? "border-indigo-600 bg-indigo-50/20 shadow-md shadow-indigo-600/5"
+                : "border-slate-200 hover:border-slate-300 bg-white"
+                }`}
             >
               <div>
                 <span className="text-2xl mb-1 block">🔹</span>
@@ -621,7 +619,7 @@ export default function SimuladorCircuitos({ volverAlMenu }: SimuladorCircuitosP
                   ))}
                 </div>
 
-                <button 
+                <button
                   className="mt-6 bg-slate-950 text-white rounded-xl py-2 font-bold text-xs cursor-pointer hover:bg-slate-900 border-none transition-all"
                   onClick={() => setSelectedResistor(null)}
                 >
@@ -635,7 +633,7 @@ export default function SimuladorCircuitos({ volverAlMenu }: SimuladorCircuitosP
                 <p className="text-xs">
                   Haz clic directamente sobre cualquier <strong>resistencia o batería</strong> del diagrama para inspeccionar su voltaje, flujo y potencia, o ajustar su valor.
                 </p>
-                <button 
+                <button
                   onClick={restablecerValores}
                   className="mt-4 flex items-center justify-center gap-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 py-1.5 px-4 rounded-xl text-xs font-bold cursor-pointer transition-all border-none"
                 >
@@ -671,7 +669,7 @@ export default function SimuladorCircuitos({ volverAlMenu }: SimuladorCircuitosP
 
         {/* Step-by-step resolution tutorial step card */}
         <section className="bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden">
-          <div 
+          <div
             onClick={() => setMostrarExplicacion(!mostrarExplicacion)}
             className="flex items-center justify-between p-5 cursor-pointer bg-slate-50 hover:bg-slate-100/50 transition-colors select-none"
           >
@@ -687,16 +685,16 @@ export default function SimuladorCircuitos({ volverAlMenu }: SimuladorCircuitosP
           {mostrarExplicacion && (
             <div className="p-5 border-t border-slate-200 space-y-4">
               <div className="flex justify-between items-center text-xs font-bold">
-                <button 
-                  onClick={retrocederPaso} 
+                <button
+                  onClick={retrocederPaso}
                   disabled={pasoActual === 0}
                   className="px-3 py-1.5 border border-slate-200 bg-white rounded-xl text-slate-600 hover:text-slate-800 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed transition-all"
                 >
                   ◀ Anterior
                 </button>
                 <span className="text-slate-400">Paso {pasoActual + 1} de {pasosActuales.length}</span>
-                <button 
-                  onClick={avanzarPaso} 
+                <button
+                  onClick={avanzarPaso}
                   disabled={pasoActual === pasosActuales.length - 1}
                   className="px-3 py-1.5 border border-slate-200 bg-white rounded-xl text-slate-600 hover:text-slate-800 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed transition-all"
                 >
