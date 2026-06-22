@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { ArrowLeft, BookOpen, Settings, Info, Gauge, RotateCcw, Activity } from "lucide-react";
+import { ArrowLeft, BookOpen, Settings, Info, Gauge, RotateCcw, Activity, ShieldAlert } from "lucide-react";
 import { MaterialKey, MaterialInfo } from "../types";
 import ManualUso from "./ManualUso";
 
@@ -7,12 +7,86 @@ interface SimuladorMetalProps {
   volverAlMenu: () => void;
 }
 
+const efectosCuerpo = [
+  {
+    rango: 0.001,
+    rangoMin: 0.001,
+    rangoMax: 0.005,
+    rangoStr: "1 mA - 5 mA",
+    efecto: "Se puede sentir",
+    explicacion: "Umbral de percepción táctil. Se siente un sutil cosquilleo en la piel debido a la excitación nerviosa superficial. No hay daño celular ni contracción muscular.",
+    badgeBg: "bg-teal-500/15 text-teal-600 border-teal-500/20",
+    colorGradiente: "from-teal-500 to-emerald-600",
+    colorBg: "bg-teal-50 border-teal-200 text-teal-800",
+    icon: "🤝",
+    peligro: "Seguro",
+    consejo: "Sensación inocua similar a la estática."
+  },
+  {
+    rango: 0.005,
+    rangoMin: 0.005,
+    rangoMax: 0.010,
+    rangoStr: "5 mA - 10 mA",
+    efecto: "Calambre doloroso",
+    explicacion: "Sensación desagradable o dolor de intensidad moderada. Provoca una respuesta refleja de retirarse, pero no impide soltar voluntariamente el conductor eléctrico.",
+    badgeBg: "bg-yellow-500/15 text-yellow-600 border-yellow-500/20",
+    colorGradiente: "from-yellow-500 to-amber-600",
+    colorBg: "bg-yellow-50 border-yellow-200 text-amber-900",
+    icon: "⚡",
+    peligro: "Dolor Leve",
+    consejo: "Reacción instantánea; se conserva el control flexor."
+  },
+  {
+    rango: 0.010,
+    rangoMin: 0.010,
+    rangoMax: 0.015,
+    rangoStr: "10 mA - 15 mA",
+    efecto: "Contracciones involuntarias (Espasmos)",
+    explicacion: "Fase primaria de agarrotamiento o tetanización. El flujo supera los estímulos neuronales biológicos que ordenan relajar las articulaciones de la mano, induciendo flexiones forzadas.",
+    badgeBg: "bg-amber-500/15 text-amber-600 border-amber-500/20",
+    colorGradiente: "from-amber-500 to-orange-600",
+    colorBg: "bg-amber-50 border-amber-200 text-amber-950",
+    icon: "✊",
+    peligro: "Moderado",
+    consejo: "Difícil soltar el cable por voluntad propia."
+  },
+  {
+    rango: 0.015,
+    rangoMin: 0.015,
+    rangoMax: 0.070,
+    rangoStr: "15 mA - 70 mA",
+    efecto: "Parálisis y pérdida del control motor",
+    explicacion: "Tetanización muscular profunda que inmoviliza los flexores de manos y brazos. El sujeto es incapaz de desprenderse del cable. Se compromete severamente la respiración.",
+    badgeBg: "bg-orange-500/15 text-orange-655 border-orange-500/20",
+    colorGradiente: "from-orange-500 to-red-650",
+    colorBg: "bg-orange-50 border-orange-200 text-orange-950",
+    icon: "🛑",
+    peligro: "Crítico",
+    consejo: "Paro respiratorio inmediato si se prolonga."
+  },
+  {
+    rango: 0.070,
+    rangoMin: 0.070,
+    rangoMax: 0.100,
+    rangoStr: "≥ 70 mA",
+    efecto: "Fibrilación ventricular irreversible",
+    explicacion: "El paso de corriente interrumpe la sincronía sinusal del corazón. Las paredes auriculares y ventriculares tiemblan sin bombear sangre, con desenlace fatal en segundos sin reanimación inmediata.",
+    badgeBg: "bg-red-500/15 text-red-650 border-red-500/20",
+    colorGradiente: "from-red-600 to-rose-700",
+    colorBg: "bg-red-50 border-red-200 text-red-950",
+    icon: "💀",
+    peligro: "Extremo",
+    consejo: "Emergencia vital. Paro cardíaco absoluto."
+  }
+];
+
 export default function SimuladorMetal({ volverAlMenu }: SimuladorMetalProps) {
   const [campoE, setCampoE] = useState<number>(2100);
   const [material, setMaterial] = useState<MaterialKey>("plata");
   const [animOffset, setAnimOffset] = useState<number>(0);
   const [modoComparacion, setModoComparacion] = useState<boolean>(false);
   const [mostrarManual, setMostrarManual] = useState<boolean>(false);
+  const [corrienteFisiologica, setCorrienteFisiologica] = useState<number>(0.001);
   const animRef = useRef<number | null>(null);
 
   // Constantes físicas reales
@@ -180,6 +254,19 @@ export default function SimuladorMetal({ volverAlMenu }: SimuladorMetalProps) {
 
   const maxEscala = Math.max(velocidad, 343) * 1.15;
 
+  // Helpers biophysic simulation
+  const getEfectoForCurrent = (val: number) => {
+    if (val >= 0.070) return 4; // Fibrilación ventricular irreversible (Hito 5)
+    if (val >= 0.015) return 3; // Parálisis y pérdida del control motor (Hito 4)
+    if (val >= 0.010) return 2; // Contracciones involuntarias / Espasmos (Hito 3)
+    if (val >= 0.005) return 1; // Calambre doloroso (Hito 2)
+    if (val >= 0.001) return 0; // Se puede sentir (Hito 1)
+    return -1;                  // Sin efectos perceptibles (< 1 mA)
+  };
+
+  const activeEfectoIndex = getEfectoForCurrent(corrienteFisiologica);
+
+
   return (
     <>
       <div className="min-h-screen bg-slate-50">
@@ -229,8 +316,8 @@ export default function SimuladorMetal({ volverAlMenu }: SimuladorMetalProps) {
                   <button
                     key={key}
                     className={`group relative overflow-hidden transition-all duration-300 p-4 border rounded-2xl text-left cursor-pointer flex flex-col justify-between h-40 ${isSelected
-                        ? "border-indigo-600 bg-indigo-50/20 shadow-md shadow-indigo-600/5 translate-y-[-2px]"
-                        : "border-slate-200 hover:border-slate-300 bg-white"
+                      ? "border-indigo-600 bg-indigo-50/20 shadow-md shadow-indigo-600/5 translate-y-[-2px]"
+                      : "border-slate-200 hover:border-slate-300 bg-white"
                       }`}
                     onClick={() => setMaterial(key)}
                   >
@@ -336,8 +423,8 @@ export default function SimuladorMetal({ volverAlMenu }: SimuladorMetalProps) {
                       key={i}
                       onClick={() => setCampoE(p.val)}
                       className={`py-2 px-3 border rounded-xl text-left cursor-pointer transition-all ${campoE === p.val
-                          ? "bg-slate-900 border-slate-900 text-white font-bold"
-                          : "border-slate-200 hover:border-slate-300 text-slate-600 hover:text-slate-800 text-xs font-semibold bg-white"
+                        ? "bg-slate-900 border-slate-900 text-white font-bold"
+                        : "border-slate-200 hover:border-slate-300 text-slate-600 hover:text-slate-800 text-xs font-semibold bg-white"
                         }`}
                     >
                       <div className="text-[10px] truncate">{p.label}</div>
@@ -564,7 +651,65 @@ export default function SimuladorMetal({ volverAlMenu }: SimuladorMetalProps) {
               </div>
             )}
           </section>
+          {/* Step 6: BIOPHYSICAL HAZARD STUDY */}
+          <section className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80 space-y-6">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <span className="w-8 h-8 rounded-full bg-red-50 text-red-600 flex items-center justify-center font-bold text-sm">6</span>
+                <div className="space-y-0.5">
+                  <h2 className="font-display font-bold text-lg text-slate-800">Biofísica de la Corriente: El Cuerpo como Conductor</h2>
+                  <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Investigación Complementaria · Seguridad Eléctrica y Efectos Fisiológicos</p>
+                </div>
+              </div>
+              <div className="inline-flex items-center gap-1.5 bg-red-50 border border-red-100 rounded-lg px-2.5 py-1 text-red-700 text-[10px] font-extrabold max-w-max">
+                <ShieldAlert className="w-3.5 h-3.5" /> APRENDIZAJE CRÍTICO
+              </div>
+            </div>
 
+            <p className="text-slate-500 text-xs leading-relaxed max-w-4xl">
+              A nivel microscópico, los electrones se desplazan por redes cristalinas. En el cuerpo humano, la corriente no es electrónica pura, sino <strong>iónica</strong> (flujo de sales como Na⁺, K⁺ y Cl⁻ disueltas en líquido intracelular). El cuerpo posee resistencia eléctrica y, al circular una diferencia de potencial, se convierte en un conductor metálico simulado. <strong>Usa el slider interactivo para ajustar el nivel de amperaje y analizar los efectos en el organismo:</strong>
+            </p>
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+              {/* Left side: Selector of card thresholds */}
+              <div className="lg:col-span-5 space-y-2.5">
+                <span className="text-[10px] text-slate-400 font-bold block mb-1">Hitos de corriente en amperios (A):</span>
+                {efectosCuerpo.map((ef, index) => {
+                  const isSelected = activeEfectoIndex === index;
+                  return (
+                    <button
+                      key={index}
+                      onClick={() => setCorrienteFisiologica(ef.rango)}
+                      className={`w-full text-left p-3 border rounded-xl transition-all flex items-center gap-3 cursor-pointer ${isSelected
+                        ? "border-red-600 bg-red-50/40 shadow-sm translate-x-1"
+                        : "border-slate-100 hover:border-slate-200 bg-slate-50/70 hover:bg-slate-100/50"
+                        }`}
+                    >
+                      <span className="text-2xl flex-shrink-0 select-none">{ef.icon}</span>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between">
+                          <span className="font-mono text-[11px] font-black text-slate-700">{ef.rangoStr}</span>
+                          <span className={`text-[8px] font-black uppercase px-2 py-0.5 rounded-full ${isSelected ? "bg-red-600 text-white" : "bg-slate-200 text-slate-500"
+                            }`}>
+                            {ef.peligro}
+                          </span>
+                        </div>
+                        <div className={`text-xs font-bold font-display truncate mt-0.5 ${isSelected ? "text-slate-900" : "text-slate-600"}`}>
+                          {ef.efecto}
+                        </div>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Right side: Interactive oscilloscope / monitor & advice */}
+              <div className="lg:col-span-7 space-y-4">
+              </div>
+
+            </div>
+          </section>
         </main>
 
         {/* Manual uso modal popup */}
