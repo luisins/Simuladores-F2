@@ -230,9 +230,12 @@ export default function SimuladorMetal({ volverAlMenu }: SimuladorMetalProps) {
   const velCategory = getVelocidadCategoria();
 
   // Posiciones de electrones animados en el cable (fluyen de derecha a izquierda hacia el ánodo positivo)
-  const posicionesElectrones = [0, 15, 30, 45, 60, 75, 90].map(offset => ({
-    left: `${(100 - ((animOffset + offset) % 100)) % 100}%`
-  }));
+  // Los electrones van de derecha (cátodo -) hacia izquierda (ánodo +)
+  // animOffset sube de 0→100, lo convertimos en posición left que baja de 100→0
+  const posicionesElectrones = [0, 15, 30, 45, 60, 75, 90].map(base => {
+    const pct = (100 - ((animOffset + base) % 100)) % 100;
+    return { left: `${pct}%`, transform: 'translateX(-50%)' };
+  });
 
   // Obtener velocidad para comparación
   const getVelocidadMaterial = (m: MaterialInfo) => {
@@ -471,8 +474,11 @@ export default function SimuladorMetal({ volverAlMenu }: SimuladorMetalProps) {
                 {posicionesElectrones.map((ep, i) => (
                   <div
                     key={i}
-                    className="absolute top-1/2 -translate-y-1/2 w-6 h-6 bg-sky-400 border border-sky-300 text-slate-950 rounded-full flex items-center justify-center font-black text-xs shadow-[0_0_12px_rgba(56,189,248,0.8)] select-none text-center cursor-help transition-all hover:scale-110"
-                    style={ep}
+                    className="absolute top-1/2 w-6 h-6 bg-sky-400 border border-sky-300 text-slate-950 rounded-full flex items-center justify-center font-black text-xs shadow-[0_0_12px_rgba(56,189,248,0.8)] select-none text-center cursor-help hover:scale-110"
+                    style={{
+                      left: ep.left,
+                      transform: `translateX(-50%) translateY(-50%)`,
+                    }}
                     title={`Velocidad de deriva: ${velocidad.toFixed(2)} m/s`}
                   >
                     e⁻
@@ -657,8 +663,8 @@ export default function SimuladorMetal({ volverAlMenu }: SimuladorMetalProps) {
               <div className="flex items-center gap-3">
                 <span className="w-8 h-8 rounded-full bg-red-50 text-red-600 flex items-center justify-center font-bold text-sm">6</span>
                 <div className="space-y-0.5">
-                  <h2 className="font-display font-bold text-lg text-slate-800">Biofísica de la Corriente: El Cuerpo como Conductor</h2>
-                  <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Investigación Complementaria · Seguridad Eléctrica y Efectos Fisiológicos</p>
+                  <h2 className="font-display font-bold text-lg text-slate-800">El Cuerpo como Conductor</h2>
+                  {/* <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Seguridad Eléctrica y Efectos Fisiológicos</p> */}
                 </div>
               </div>
               <div className="inline-flex items-center gap-1.5 bg-red-50 border border-red-100 rounded-lg px-2.5 py-1 text-red-700 text-[10px] font-extrabold max-w-max">

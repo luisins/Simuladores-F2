@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ArrowLeft, BookOpen, RotateCcw, CheckCircle, HelpCircle, Activity } from "lucide-react";
 import { CircuitType, ResistorStats } from "../types";
 import ManualUso from "./ManualUso";
@@ -140,27 +140,60 @@ export default function SimuladorCircuitos({ volverAlMenu }: SimuladorCircuitosP
   const resultados: ResistorStats = circuitoActivo === "a" ? calcularCircuitoA() : calcularCircuitoB();
 
   // Pasos del tutorial interactivo
-  const pasosA = [
-    { text: "R₁, R₄ y R₅ están conectadas en serie, por ellas viaja la misma corriente.", formula: `R₁₄₅ = R₁ + R₄ + R₅ = ${r1} + ${r4} + ${r5} = ${resultados.rGroupSeries} Ω` },
-    { text: "R₃ está en paralelo con el equivalente R₁₄₅ (tienen los mismos nodos).", formula: `R₃₁₄₅ = (R₃ · R₁₄₅) / (R₃ + R₁₄₅) = (${r3} · ${resultados.rGroupSeries}) / (${r3} + ${resultados.rGroupSeries}) = ${resultados.rGroupParallel?.toFixed(2)} Ω` },
-    { text: "El conjunto paralelo está en serie con R₂ y R₆.", formula: `R_eq = R₂ + R₃₁₄₅ + R₆ = ${r2} + ${resultados.rGroupParallel?.toFixed(2)} + ${r6} = ${resultados.req.toFixed(2)} Ω` },
-    { text: "Calculamos la corriente principal del circuito por la Ley de Ohm.", formula: `I₁ = V / R_eq = ${voltaje}V / ${resultados.req.toFixed(2)}Ω = ${resultados.iTotal.toFixed(3)} A` },
-    { text: "Voltaje en bornes de la rama paralela central.", formula: `V₃₁₄₅ = I₁ · R₃₁₄₅ = ${resultados.iTotal.toFixed(3)}A · ${resultados.rGroupParallel?.toFixed(2)}Ω = ${resultados.vGroupParallel?.toFixed(2)} V` },
-    { text: "Corriente por R₃ (rama central).", formula: `I₃ = V₃₁₄₅ / R₃ = ${resultados.vGroupParallel?.toFixed(2)}V / ${r3}Ω = ${resultados.iR3.toFixed(3)} A` },
-    { text: "Corriente por R₁, R₄ y R₅ (rama derecha).", formula: `I₂ = V₃₁₄₅ / R₁₄₅ = ${resultados.vGroupParallel?.toFixed(2)}V / ${resultados.rGroupSeries}Ω = ${resultados.iR1.toFixed(3)} A` }
-  ];
+  // ─── Cortocircuito en circuito A: R3 = 0 ───────────────────────────────────
+  const cortocircuitoA = r3 === 0;
+  const pasosA = cortocircuitoA
+    ? [
+        { text: "⚠️ CORTOCIRCUITO en R₃: su resistencia es 0 Ω. Esto convierte a R₃ en un conductor ideal que une directamente los dos nodos del grupo paralelo.", formula: `R₃ = 0 Ω → cortocircuito` },
+        { text: "Al haber cortocircuito en R₃, el voltaje entre los nodos del paralelo cae a 0 V. Por lo tanto, la rama R₁-R₄-R₅ no recibe tensión: I(R₁) = I(R₄) = I(R₅) = 0 A.", formula: `V_nodos = 0 V  →  I₁₄₅ = 0 A` },
+        { text: "La resistencia equivalente del paralelo se reduce a 0 Ω (R₃ en cortocircuito domina). El circuito simplificado queda: R₂ + 0 + R₆.", formula: `R_eq = R₂ + 0 + R₆ = ${r2} + 0 + ${r6} = ${resultados.req.toFixed(2)} Ω` },
+        { text: "Calculamos la corriente total que sale de la batería con la resistencia equivalente simplificada.", formula: `I_total = V / R_eq = ${voltaje}V / ${resultados.req.toFixed(2)}Ω = ${resultados.iTotal.toFixed(3)} A` },
+        { text: "Toda esa corriente pasa íntegramente por R₃ (el cortocircuito). R₁, R₄ y R₅ no participan en el circuito activo.", formula: `I₃ = I_total = ${resultados.iTotal.toFixed(3)} A   |   I₁ = I₄ = I₅ = 0 A` },
+        { text: "R₂ y R₆ llevan la corriente total (están en serie con la fuente).", formula: `I(R₂) = I(R₆) = ${resultados.iTotal.toFixed(3)} A` }
+      ]
+    : [
+        { text: "R₁, R₄ y R₅ están conectadas en serie, por ellas viaja la misma corriente.", formula: `R₁₄₅ = R₁ + R₄ + R₅ = ${r1} + ${r4} + ${r5} = ${resultados.rGroupSeries} Ω` },
+        { text: "R₃ está en paralelo con el equivalente R₁₄₅ (tienen los mismos nodos).", formula: `R₃₁₄₅ = (R₃ · R₁₄₅) / (R₃ + R₁₄₅) = (${r3} · ${resultados.rGroupSeries}) / (${r3} + ${resultados.rGroupSeries}) = ${resultados.rGroupParallel?.toFixed(2)} Ω` },
+        { text: "El conjunto paralelo está en serie con R₂ y R₆.", formula: `R_eq = R₂ + R₃₁₄₅ + R₆ = ${r2} + ${resultados.rGroupParallel?.toFixed(2)} + ${r6} = ${resultados.req.toFixed(2)} Ω` },
+        { text: "Calculamos la corriente principal del circuito por la Ley de Ohm.", formula: `I₁ = V / R_eq = ${voltaje}V / ${resultados.req.toFixed(2)}Ω = ${resultados.iTotal.toFixed(3)} A` },
+        { text: "Voltaje en bornes de la rama paralela central.", formula: `V₃₁₄₅ = I₁ · R₃₁₄₅ = ${resultados.iTotal.toFixed(3)}A · ${resultados.rGroupParallel?.toFixed(2)}Ω = ${resultados.vGroupParallel?.toFixed(2)} V` },
+        { text: "Corriente por R₃ (rama central).", formula: `I₃ = V₃₁₄₅ / R₃ = ${resultados.vGroupParallel?.toFixed(2)}V / ${r3}Ω = ${resultados.iR3.toFixed(3)} A` },
+        { text: "Corriente por R₁, R₄ y R₅ (rama derecha).", formula: `I₂ = V₃₁₄₅ / R₁₄₅ = ${resultados.vGroupParallel?.toFixed(2)}V / ${resultados.rGroupSeries}Ω = ${resultados.iR1.toFixed(3)} A` }
+      ];
 
-  const pasosB = [
-    { text: "R₂ y R₃ están en paralelo entre sí. Se reducen a un valor equivalente.", formula: `R₂₃ = (R₂ · R₃) / (R₂ + R₃) = (${r2} · ${r3}) / (${r2} + ${r3}) = ${resultados.rGroupParallel?.toFixed(2)} Ω` },
-    { text: "El circuito equivalente queda con R₁, R₂₃, R₄ y R₅ conectadas en serie.", formula: `R_eq = R₁ + R₂₃ + R₄ + R₅` },
-    { text: `Simplificamos la suma para hallar la resistencia equivalente total.`, formula: `R_eq = ${r1}Ω + ${resultados.rGroupParallel?.toFixed(2)}Ω + ${r4}Ω + ${r5}Ω = ${resultados.req.toFixed(2)} Ω` },
-    { text: `Calculamos la corriente principal suministrada por la batería.`, formula: `I_total = V / R_eq = ${voltaje}V / ${resultados.req.toFixed(2)}Ω = ${resultados.iTotal.toFixed(3)} A` },
-    { text: "Caído de tensión en la asociación paralela central.", formula: `V₂₃ = I_total · R₂₃ = ${resultados.iTotal.toFixed(3)}A · ${resultados.rGroupParallel?.toFixed(2)}Ω = ${resultados.vGroupParallel?.toFixed(2)} V` },
-    { text: "Corriente por R₂.", formula: `I₂ = V₂₃ / R₂ = ${resultados.vGroupParallel?.toFixed(2)}V / ${r2}Ω = ${resultados.iR2.toFixed(3)} A` },
-    { text: "Corriente por R₃.", formula: `I₃ = V₂₃ / R₃ = ${resultados.vGroupParallel?.toFixed(2)}V / ${r3}Ω = ${resultados.iR3.toFixed(3)} A` }
-  ];
+  // ─── Cortocircuito en circuito B: R2=0 o R3=0 ──────────────────────────────
+  const cortocircuitoB_R2 = r2 === 0;
+  const cortocircuitoB_R3 = r3 === 0;
+  const cortocircuitoB = cortocircuitoB_R2 || cortocircuitoB_R3;
+  const rCortaB = cortocircuitoB_R2 ? "R₂" : "R₃";
+  const rAbiertaB = cortocircuitoB_R2 ? "R₃" : "R₂";
+  const iRCortaB = cortocircuitoB_R2 ? resultados.iR2 : resultados.iR3;
+  const pasosB = cortocircuitoB
+    ? [
+        { text: `⚠️ CORTOCIRCUITO en ${rCortaB}: su resistencia es 0 Ω. Actúa como conductor perfecto entre los nodos del paralelo.`, formula: `${rCortaB} = 0 Ω → cortocircuito` },
+        { text: `El voltaje en los nodos del paralelo cae a 0 V, por lo que ${rAbiertaB} no recibe tensión y su corriente es 0 A.`, formula: `V_nodos = 0 V  →  I(${rAbiertaB}) = 0 A` },
+        { text: `La resistencia equivalente del paralelo es 0 Ω. El circuito simplificado es: R₁ + 0 + R₄ + R₅.`, formula: `R_eq = R₁ + 0 + R₄ + R₅ = ${r1} + 0 + ${r4} + ${r5} = ${resultados.req.toFixed(2)} Ω` },
+        { text: "Calculamos la corriente total que suministra la batería.", formula: `I_total = V / R_eq = ${voltaje}V / ${resultados.req.toFixed(2)}Ω = ${resultados.iTotal.toFixed(3)} A` },
+        { text: `Toda la corriente fluye por ${rCortaB} (cortocircuito). R₁, R₄ y R₅ conducen I_total en serie.`, formula: `I(${rCortaB}) = I_total = ${iRCortaB.toFixed(3)} A   |   I(${rAbiertaB}) = 0 A` }
+      ]
+    : [
+        { text: "R₂ y R₃ están en paralelo entre sí. Se reducen a un valor equivalente.", formula: `R₂₃ = (R₂ · R₃) / (R₂ + R₃) = (${r2} · ${r3}) / (${r2} + ${r3}) = ${resultados.rGroupParallel?.toFixed(2)} Ω` },
+        { text: "El circuito equivalente queda con R₁, R₂₃, R₄ y R₅ conectadas en serie.", formula: `R_eq = R₁ + R₂₃ + R₄ + R₅` },
+        { text: `Simplificamos la suma para hallar la resistencia equivalente total.`, formula: `R_eq = ${r1}Ω + ${resultados.rGroupParallel?.toFixed(2)}Ω + ${r4}Ω + ${r5}Ω = ${resultados.req.toFixed(2)} Ω` },
+        { text: `Calculamos la corriente principal suministrada por la batería.`, formula: `I_total = V / R_eq = ${voltaje}V / ${resultados.req.toFixed(2)}Ω = ${resultados.iTotal.toFixed(3)} A` },
+        { text: "Caído de tensión en la asociación paralela central.", formula: `V₂₃ = I_total · R₂₃ = ${resultados.iTotal.toFixed(3)}A · ${resultados.rGroupParallel?.toFixed(2)}Ω = ${resultados.vGroupParallel?.toFixed(2)} V` },
+        { text: "Corriente por R₂.", formula: `I₂ = V₂₃ / R₂ = ${resultados.vGroupParallel?.toFixed(2)}V / ${r2}Ω = ${resultados.iR2.toFixed(3)} A` },
+        { text: "Corriente por R₃.", formula: `I₃ = V₂₃ / R₃ = ${resultados.vGroupParallel?.toFixed(2)}V / ${r3}Ω = ${resultados.iR3.toFixed(3)} A` }
+      ];
 
   const pasosActuales = circuitoActivo === "a" ? pasosA : pasosB;
+
+  // Resetear el paso si el total de pasos cambió (p.ej. al activar un cortocircuito)
+  useEffect(() => {
+    if (pasoActual >= pasosActuales.length) {
+      setPasoActual(0);
+    }
+  }, [pasosActuales.length]);
 
   const avanzarPaso = () => {
     if (pasoActual < pasosActuales.length - 1) {
@@ -732,9 +765,17 @@ export default function SimuladorCircuitos({ volverAlMenu }: SimuladorCircuitosP
           </p>
           <div className="bg-white/80 border border-emerald-200 rounded-xl p-3 font-mono text-xs text-emerald-900 shadow-inner">
             {circuitoActivo === "a" ? (
-              <span>I₁ (R₂) = I₃ (R₃) + I₂ (R₁₄₅) ➔ {resultados.iTotal.toFixed(3)} A = {resultados.iR3.toFixed(3)} A + {resultados.iR1.toFixed(3)} A</span>
+              cortocircuitoA ? (
+                <span>⚠️ Cortocircuito en R₃ → I₃ = I_total = {resultados.iR3.toFixed(3)} A | I(R₁₄₅) = 0 A → {resultados.iTotal.toFixed(3)} A = {resultados.iR3.toFixed(3)} A + 0.000 A ✓</span>
+              ) : (
+                <span>I₁ (R₂) = I₃ (R₃) + I₂ (R₁₄₅) ➔ {resultados.iTotal.toFixed(3)} A = {resultados.iR3.toFixed(3)} A + {resultados.iR1.toFixed(3)} A</span>
+              )
             ) : (
-              <span>I_total = I_rama₂ (R₂) + I_rama₃ (R₃) ➔ {resultados.iTotal.toFixed(3)} A = {resultados.iR2.toFixed(3)} A + {resultados.iR3.toFixed(3)} A</span>
+              cortocircuitoB ? (
+                <span>⚠️ Cortocircuito en {rCortaB} → I({rCortaB}) = I_total = {iRCortaB.toFixed(3)} A | I({rAbiertaB}) = 0 A → {resultados.iTotal.toFixed(3)} A = {iRCortaB.toFixed(3)} A + 0.000 A ✓</span>
+              ) : (
+                <span>I_total = I_rama₂ (R₂) + I_rama₃ (R₃) ➔ {resultados.iTotal.toFixed(3)} A = {resultados.iR2.toFixed(3)} A + {resultados.iR3.toFixed(3)} A</span>
+              )
             )}
           </div>
         </section>

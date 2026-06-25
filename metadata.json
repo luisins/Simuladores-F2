@@ -1,6 +1,8 @@
 {
-  "name": "Simuladores de Física",
+  "name": "Simuladores de Física 2 - UT 4.",
   "description": "Simuladores interactivos de Física II: velocidad de deriva de electrones, circuitos con resistencias en serie/paralelo y análisis de mallas por Leyes de Kirchhoff.",
   "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
 }
