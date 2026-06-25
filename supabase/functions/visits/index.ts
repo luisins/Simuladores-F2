@@ -7,23 +7,24 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Client-Info, Apikey",
 };
 
-const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { status: 200, headers: corsHeaders });
   }
 
   try {
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     if (req.method === "POST") {
-      // Increment the counter atomically
+      // Use raw SQL for atomic increment
       const { data, error } = await supabase.rpc("increment_visits");
 
+      let finalCount = 0;
+
       if (error) {
-        // If RPC doesn't exist, do a manual increment
+        // Fallback: manual read-increment-write
         const { data: current } = await supabase
           .from("site_visits")
           .select("count")
@@ -32,23 +33,23 @@ Deno.serve(async (req: Request) => {
 
         const newCount = (current?.count || 0) + 1;
 
-        await supabase
+        const { error: updateError } = await supabase
           .from("site_visits")
-          .upsert({ id: 1, count: newCount });
+          .update({ count: newCount })
+          .eq("id", 1);
 
-        return new Response(
-          JSON.stringify({ count: newCount }),
-          { headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
+        finalCount = updateError ? (current?.count || 0) : newCount;
+      } else {
+        finalCount = data;
       }
 
       return new Response(
-        JSON.stringify({ count: data }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        JSON.stringify({ count: finalCount }),
+        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    // GET - just return current count
+    // GET - return current count
     const { data, error } = await supabase
       .from("site_visits")
       .select("count")
@@ -57,19 +58,20 @@ Deno.serve(async (req: Request) => {
 
     if (error) {
       return new Response(
-        JSON.stringify({ count: 0 }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        JSON.stringify({ count: 0, error: error.message }),
+        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
     return new Response(
       JSON.stringify({ count: data?.count || 0 }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (err) {
+    const message = err instanceof Error ? err.message : "Unknown error";
     return new Response(
-      JSON.stringify({ error: "Internal error", count: 0 }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      JSON.stringify({ count: 0, error: message }),
+      { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
 });
