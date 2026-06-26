@@ -23,7 +23,7 @@ export default function ManualUso({ tipo = "metal", onClose }: ManualUsoProps) {
                 <div className="text-center py-6 border-b border-slate-100">
                   <span className="text-5xl block mb-3">🔌</span>
                   <h2 className="font-display font-bold text-2xl text-slate-800">
-                    Guía Didáctica: Red de Resistores
+                    Guía Didáctica: Red de resistencias
                   </h2>
                   <p className="text-indigo-600 font-medium text-sm mt-1">
                     Asociación mixta de resistencias en serie y paralelo (Problema G4-8)
@@ -76,7 +76,7 @@ export default function ManualUso({ tipo = "metal", onClose }: ManualUsoProps) {
             contenido: (
               <div className="space-y-6 animate-fade-in">
                 <h2 className="font-display font-bold text-xl text-slate-800 border-b-2 border-indigo-500 pb-2">
-                  Simplificación del Circuito Red de Resistores
+                  Simplificación del Circuito Red de resistencias
                 </h2>
                 <p className="text-slate-600 text-sm leading-relaxed">
                   Para simplificar un circuito mixto, se buscan asociaciones puramente en serie o paralelo consecutivas y se reemplazan por su valor equivalente.
@@ -87,7 +87,7 @@ export default function ManualUso({ tipo = "metal", onClose }: ManualUsoProps) {
                   <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
                     <div className="flex items-center gap-3 mb-2">
                       <span className="w-8 h-8 rounded-full bg-indigo-100 text-indigo-700 font-mono font-bold flex items-center justify-center text-sm">S</span>
-                      <strong className="text-slate-800 text-sm">Resistores en Serie</strong>
+                      <strong className="text-slate-800 text-sm">Resistencias en Serie</strong>
                     </div>
                     <p className="text-xs text-slate-500 mb-2">Comparten la misma corriente. Se suman de forma lineal:</p>
                     <div className="bg-indigo-50 border-l-4 border-indigo-500 p-3.5 font-mono text-center text-slate-800 text-lg rounded-r-lg">
@@ -99,7 +99,7 @@ export default function ManualUso({ tipo = "metal", onClose }: ManualUsoProps) {
                   <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
                     <div className="flex items-center gap-3 mb-2">
                       <span className="w-8 h-8 rounded-full bg-violet-100 text-violet-700 font-mono font-bold flex items-center justify-center text-sm">P</span>
-                      <strong className="text-slate-800 text-sm">Resistores en Paralelo</strong>
+                      <strong className="text-slate-800 text-sm">Resistencias en Paralelo</strong>
                     </div>
                     <p className="text-xs text-slate-500 mb-2">Comparten el mismo potencial eléctrico. Se reducen mediante la suma de sus recíprocos:</p>
                     <div className="bg-violet-50 border-l-4 border-violet-500 p-3.5 font-mono text-center text-slate-800 text-lg rounded-r-lg">
@@ -118,7 +118,7 @@ export default function ManualUso({ tipo = "metal", onClose }: ManualUsoProps) {
             contenido: (
               <div className="space-y-6 animate-fade-in">
                 <h2 className="font-display font-bold text-xl text-slate-800 border-b-2 border-indigo-500 pb-2">
-                  Cómo Utilizar el Simulador Red de Resistores
+                  Cómo Utilizar el Simulador Red de Resistencias
                 </h2>
 
                 <div className="space-y-4 text-sm text-slate-600">
@@ -132,7 +132,7 @@ export default function ManualUso({ tipo = "metal", onClose }: ManualUsoProps) {
                   <div className="flex gap-4 items-start">
                     <span className="w-6 h-6 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold text-xs flex-shrink-0 mt-0.5">2</span>
                     <p>
-                      <strong>Edición de Componentes:</strong> Haz clic en cualquier resistor o la batería del esquema. Se seleccionará con un resplandor azul y se abrirán controles deslizantes dinámicos para ajustar su valor en tiempo real.
+                      <strong>Edición de Componentes:</strong> Haz clic en cualquier resistencia o la batería del esquema. Se seleccionará con un resplandor azul y se abrirán controles deslizantes dinámicos para ajustar su valor en tiempo real.
                     </p>
                   </div>
 
@@ -259,7 +259,7 @@ export default function ManualUso({ tipo = "metal", onClose }: ManualUsoProps) {
                   <p>
                     Este simulador científico automatiza no solo el cálculo, sino también la detección de corrientes de signo invertido.
                   </p>
-                  
+
                   <div className="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-xl">
                     <span className="font-bold text-amber-900 block mb-1">¿Qué significa una corriente negativa?</span>
                     <p className="text-amber-800">
@@ -392,7 +392,7 @@ export default function ManualUso({ tipo = "metal", onClose }: ManualUsoProps) {
   return (
     <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-[9999] flex items-center justify-center p-4">
       <div className="bg-white rounded-3xl w-full max-w-4xl max-h-[90vh] flex flex-col overflow-hidden shadow-2xl border border-slate-200 animate-in fade-in zoom-in-95 duration-150">
-        
+
         {/* Header */}
         <div className="bg-slate-900 text-white p-5 flex items-center justify-between gap-4 flex-shrink-0">
           <div className="flex items-center gap-3">
@@ -402,15 +402,15 @@ export default function ManualUso({ tipo = "metal", onClose }: ManualUsoProps) {
                 Guía Práctica del Simulador
               </h1>
               <p className="text-slate-400 text-xs mt-1.5 font-medium">
-                {tipo === "metal" 
-                  ? "Flujo Microscópico en Conductores · Problema 7" 
-                  : tipo === "circuito" 
-                    ? "Redes de Resistores en Serie/Paralelo · Problema 8" 
+                {tipo === "metal"
+                  ? "Flujo Microscópico en Conductores · Problema 7"
+                  : tipo === "circuito"
+                    ? "Redes de Resistencias en Serie/Paralelo · Problema 8"
                     : "Leyes de Kirchhoff y Resolución de Mallas · Problema 9"}
               </p>
             </div>
           </div>
-          <button 
+          <button
             className="bg-slate-800 hover:bg-slate-705 text-white hover:text-red-400 border border-slate-700 py-1.5 px-4 rounded-xl cursor-pointer text-xs font-bold transition-all flex items-center gap-1.5 active:scale-95"
             onClick={onClose}
           >
@@ -425,11 +425,10 @@ export default function ManualUso({ tipo = "metal", onClose }: ManualUsoProps) {
             {secciones.map((s, idx) => (
               <button
                 key={s.id}
-                className={`flex items-center gap-3 p-3 rounded-xl border-none cursor-pointer text-left w-full transition-all text-xs font-semibold whitespace-nowrap min-w-[120px] md:min-w-0 ${
-                  seccionActiva === idx
+                className={`flex items-center gap-3 p-3 rounded-xl border-none cursor-pointer text-left w-full transition-all text-xs font-semibold whitespace-nowrap min-w-[120px] md:min-w-0 ${seccionActiva === idx
                     ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/10 font-bold"
                     : "text-slate-600 hover:bg-slate-200/50 hover:text-indigo-600"
-                }`}
+                  }`}
                 onClick={() => setSeccionActiva(idx)}
               >
                 <span className="text-base flex-shrink-0">{s.icon}</span>
@@ -454,7 +453,7 @@ export default function ManualUso({ tipo = "metal", onClose }: ManualUsoProps) {
               >
                 <ArrowLeft className="w-3.5 h-3.5" /> Anterior
               </button>
-              
+
               <span className="text-xs text-slate-400 font-bold">
                 Página {seccionActiva + 1} de {secciones.length}
               </span>
