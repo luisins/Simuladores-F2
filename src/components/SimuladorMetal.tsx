@@ -673,7 +673,7 @@ export default function SimuladorMetal({ volverAlMenu }: SimuladorMetalProps) {
             </div>
 
             <p className="text-slate-500 text-xs leading-relaxed max-w-4xl">
-              A nivel microscópico, los electrones se desplazan por redes cristalinas. En el cuerpo humano, la corriente no es electrónica pura, sino <strong>iónica</strong> (flujo de sales como Na⁺, K⁺ y Cl⁻ disueltas en líquido intracelular). El cuerpo posee resistencia eléctrica y, al circular una diferencia de potencial, se convierte en un conductor metálico simulado. <strong>Usa el slider interactivo para ajustar el nivel de amperaje y analizar los efectos en el organismo:</strong>
+              A nivel microscópico, los electrones se desplazan por redes cristalinas. En el cuerpo humano, la corriente no es electrónica pura, sino <strong>iónica</strong> (flujo de sales como Na⁺, K⁺ y Cl⁻ disueltas en líquido intracelular). El cuerpo posee resistencia eléctrica y, al circular una diferencia de potencial, se convierte en un conductor metálico simulado. {/* <strong>Usa el slider interactivo para ajustar el nivel de amperaje y analizar los efectos en el organismo:</strong> */}
             </p>
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
