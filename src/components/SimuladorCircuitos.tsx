@@ -490,7 +490,7 @@ export default function SimuladorCircuitos({ volverAlMenu }: SimuladorCircuitosP
                   {/* Battery */}
                   <g className={`interactive-resistor ${selectedResistor === "battery" ? "selected" : ""} ${getHighlightClass("battery")}`} onClick={() => setSelectedResistor("battery")}>
                     <rect x="22" y="195" width="66" height="70" className="resistor-bg" />
-                    <rect x="30" y="210" width="50" height="40" rx="6" fill="#22c55e" stroke="#1e293b" strokeWidth="2" />
+                    <rect x="30" y="210" width="50" height="40" rx="6" fill="#3b82f6" stroke="#1e293b" strokeWidth="2" />
                     {/* Polarity indicators */}
                     <circle cx="55" cy={voltaje < 0 ? 265 : 195} r="8" fill="#ef4444" className="stroke-white" strokeWidth="1" />
                     <text x="55" y={voltaje < 0 ? 268 : 198} textAnchor="middle" fill="white" className="text-xs font-black font-sans">+</text>
@@ -595,21 +595,21 @@ export default function SimuladorCircuitos({ volverAlMenu }: SimuladorCircuitosP
                     onClick={() => setSelectedResistor('battery')}
                   >
                     <rect x="22" y="195" width="66" height="70" className="resistor-bg" />
-                    <rect x="30" y="210" width="50" height="40" rx="6" fill="url(#batteryGradB)" stroke="#2c3e50" strokeWidth="2" />
+                    <rect x="30" y="210" width="50" height="40" rx="6" fill="#3b82f6" stroke="#1e293b" strokeWidth="2" />
                     {/* Polarity indicators */}
                     <circle cx="55" cy={voltaje < 0 ? 265 : 195} r="8" fill="#ef4444" className="stroke-white" strokeWidth="1" />
                     <text x="55" y={voltaje < 0 ? 268 : 198} textAnchor="middle" fill="white" className="text-xs font-black font-sans">+</text>
                     <circle cx="55" cy={voltaje < 0 ? 195 : 265} r="8" fill="#3b82f6" className="stroke-white" strokeWidth="1" />
                     <text x="55" y={voltaje < 0 ? 198 : 268} textAnchor="middle" fill="white" className="text-xs font-black font-sans">-</text>
 
-                    <text x="55" y="234" textAnchor="middle" fill="white" fontSize="13" fontWeight="bold">{Math.abs(voltaje)}V</text>
+                    <text x="55" y="234" textAnchor="middle" fill="white" className="font-mono text-xs font-bold">{Math.abs(voltaje)}V</text>
                     {voltaje < 0 && (
                       <g className="pointer-events-none select-none">
-                        <rect x="95" y="215" width="70" height="16" rx="4" fill="#fef3c7" stroke="#f59e0b" strokeWidth="1" />
-                        <text x="130" y="226" textAnchor="middle" fill="#d97706" fontSize="9" fontWeight="bold">⚠️ Polaridad Invertida</text>
+                        <rect x="95" y="215" width="100" height="16" rx="4" fill="#fef3c7" stroke="#f59e0b" strokeWidth="1" />
+                        <text x="145" y="226" textAnchor="middle" fill="#d97706" fontSize="9" fontWeight="bold">⚠️ Polaridad Invertida</text>
                       </g>
                     )}
-                    <text x="55" y="260" textAnchor="middle" fill="#2c3e50" fontSize="10" fontWeight="bold">Batería</text>
+                    <text x="55" y="260" textAnchor="middle" fill="#1e293b" className="text-[10px] font-bold">Batería</text>
                   </g>
 
                   {/* R1 */}
