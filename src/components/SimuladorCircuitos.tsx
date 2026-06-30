@@ -164,22 +164,22 @@ export default function SimuladorCircuitos({ volverAlMenu }: SimuladorCircuitosP
   const cortocircuitoA = r3 === 0;
   const pasosA = cortocircuitoA
     ? [
-        { text: "⚠️ CORTOCIRCUITO en R₃: su resistencia es 0 Ω. Esto convierte a R₃ en un conductor ideal que une directamente los dos nodos del grupo paralelo.", formula: `R₃ = 0 Ω → cortocircuito` },
-        { text: "Al haber cortocircuito en R₃, el voltaje entre los nodos del paralelo cae a 0 V. Por lo tanto, la rama R₁-R₄-R₅ no recibe tensión: I(R₁) = I(R₄) = I(R₅) = 0 A.", formula: `V_nodos = 0 V  →  I₁₄₅ = 0 A` },
-        { text: "La resistencia equivalente del paralelo se reduce a 0 Ω (R₃ en cortocircuito domina). El circuito simplificado queda: R₂ + 0 + R₆.", formula: `R_eq = R₂ + 0 + R₆ = ${r2} + 0 + ${r6} = ${resultados.req.toFixed(2)} Ω` },
-        { text: "Calculamos la corriente total que sale de la batería con la resistencia equivalente simplificada.", formula: `I_total = V / R_eq = ${voltaje}V / ${resultados.req.toFixed(2)}Ω = ${resultados.iTotal.toFixed(3)} A` },
-        { text: "Toda esa corriente pasa íntegramente por R₃ (el cortocircuito). R₁, R₄ y R₅ no participan en el circuito activo.", formula: `I₃ = I_total = ${resultados.iTotal.toFixed(3)} A   |   I₁ = I₄ = I₅ = 0 A` },
-        { text: "R₂ y R₆ llevan la corriente total (están en serie con la fuente).", formula: `I(R₂) = I(R₆) = ${resultados.iTotal.toFixed(3)} A` }
-      ]
+      { text: "⚠️ CORTOCIRCUITO en R₃: su resistencia es 0 Ω. Esto convierte a R₃ en un conductor ideal que une directamente los dos nodos del grupo paralelo.", formula: `R₃ = 0 Ω → cortocircuito` },
+      { text: "Al haber cortocircuito en R₃, el voltaje entre los nodos del paralelo cae a 0 V. Por lo tanto, la rama R₁-R₄-R₅ no recibe tensión: I(R₁) = I(R₄) = I(R₅) = 0 A.", formula: `V_nodos = 0 V  →  I₁₄₅ = 0 A` },
+      { text: "La resistencia equivalente del paralelo se reduce a 0 Ω (R₃ en cortocircuito domina). El circuito simplificado queda: R₂ + 0 + R₆.", formula: `R_eq = R₂ + 0 + R₆ = ${r2} + 0 + ${r6} = ${resultados.req.toFixed(2)} Ω` },
+      { text: "Calculamos la corriente total que sale de la batería con la resistencia equivalente simplificada.", formula: `I_total = V / R_eq = ${voltaje}V / ${resultados.req.toFixed(2)}Ω = ${resultados.iTotal.toFixed(3)} A` },
+      { text: "Toda esa corriente pasa íntegramente por R₃ (el cortocircuito). R₁, R₄ y R₅ no participan en el circuito activo.", formula: `I₃ = I_total = ${resultados.iTotal.toFixed(3)} A   |   I₁ = I₄ = I₅ = 0 A` },
+      { text: "R₂ y R₆ llevan la corriente total (están en serie con la fuente).", formula: `I(R₂) = I(R₆) = ${resultados.iTotal.toFixed(3)} A` }
+    ]
     : [
-        { text: "R₁, R₄ y R₅ están conectadas en serie, por ellas viaja la misma corriente.", formula: `R₁₄₅ = R₁ + R₄ + R₅ = ${r1} + ${r4} + ${r5} = ${resultados.rGroupSeries} Ω` },
-        { text: "R₃ está en paralelo con el equivalente R₁₄₅ (tienen los mismos nodos).", formula: `R₃₁₄₅ = (R₃ · R₁₄₅) / (R₃ + R₁₄₅) = (${r3} · ${resultados.rGroupSeries}) / (${r3} + ${resultados.rGroupSeries}) = ${resultados.rGroupParallel?.toFixed(2)} Ω` },
-        { text: "El conjunto paralelo está en serie con R₂ y R₆.", formula: `R_eq = R₂ + R₃₁₄₅ + R₆ = ${r2} + ${resultados.rGroupParallel?.toFixed(2)} + ${r6} = ${resultados.req.toFixed(2)} Ω` },
-        { text: "Calculamos la corriente principal del circuito por la Ley de Ohm.", formula: `I₁ = V / R_eq = ${voltaje}V / ${resultados.req.toFixed(2)}Ω = ${resultados.iTotal.toFixed(3)} A` },
-        { text: "Voltaje en bornes de la rama paralela central.", formula: `V₃₁₄₅ = I₁ · R₃₁₄₅ = ${resultados.iTotal.toFixed(3)}A · ${resultados.rGroupParallel?.toFixed(2)}Ω = ${resultados.vGroupParallel?.toFixed(2)} V` },
-        { text: "Corriente por R₃ (rama central).", formula: `I₃ = V₃₁₄₅ / R₃ = ${resultados.vGroupParallel?.toFixed(2)}V / ${r3}Ω = ${resultados.iR3.toFixed(3)} A` },
-        { text: "Corriente por R₁, R₄ y R₅ (rama derecha).", formula: `I₂ = V₃₁₄₅ / R₁₄₅ = ${resultados.vGroupParallel?.toFixed(2)}V / ${resultados.rGroupSeries}Ω = ${resultados.iR1.toFixed(3)} A` }
-      ];
+      { text: "R₁, R₄ y R₅ están conectadas en serie, por ellas viaja la misma corriente.", formula: `R₁₄₅ = R₁ + R₄ + R₅ = ${r1} + ${r4} + ${r5} = ${resultados.rGroupSeries} Ω` },
+      { text: "R₃ está en paralelo con el equivalente R₁₄₅ (tienen los mismos nodos).", formula: `R₃₁₄₅ = (R₃ · R₁₄₅) / (R₃ + R₁₄₅) = (${r3} · ${resultados.rGroupSeries}) / (${r3} + ${resultados.rGroupSeries}) = ${resultados.rGroupParallel?.toFixed(2)} Ω` },
+      { text: "El conjunto paralelo está en serie con R₂ y R₆.", formula: `R_eq = R₂ + R₃₁₄₅ + R₆ = ${r2} + ${resultados.rGroupParallel?.toFixed(2)} + ${r6} = ${resultados.req.toFixed(2)} Ω` },
+      { text: "Calculamos la corriente principal del circuito por la Ley de Ohm.", formula: `I₁ = V / R_eq = ${voltaje}V / ${resultados.req.toFixed(2)}Ω = ${resultados.iTotal.toFixed(3)} A` },
+      { text: "Voltaje en bornes de la rama paralela central.", formula: `V₃₁₄₅ = I₁ · R₃₁₄₅ = ${resultados.iTotal.toFixed(3)}A · ${resultados.rGroupParallel?.toFixed(2)}Ω = ${resultados.vGroupParallel?.toFixed(2)} V` },
+      { text: "Corriente por R₃ (rama central).", formula: `I₃ = V₃₁₄₅ / R₃ = ${resultados.vGroupParallel?.toFixed(2)}V / ${r3}Ω = ${resultados.iR3.toFixed(3)} A` },
+      { text: "Corriente por R₁, R₄ y R₅ (rama derecha).", formula: `I₂ = V₃₁₄₅ / R₁₄₅ = ${resultados.vGroupParallel?.toFixed(2)}V / ${resultados.rGroupSeries}Ω = ${resultados.iR1.toFixed(3)} A` }
+    ];
 
   // ─── Cortocircuito en circuito B: R2=0 o R3=0 ──────────────────────────────
   const cortocircuitoB_R2 = r2 === 0;
@@ -190,20 +190,20 @@ export default function SimuladorCircuitos({ volverAlMenu }: SimuladorCircuitosP
   const iRCortaB = cortocircuitoB_R2 ? resultados.iR2 : resultados.iR3;
   const pasosB = llaveB
     ? [
-        { text: `⚠️ LLAVE CERRADA: La llave conecta el nodo antes de R₂/R₃ directamente con el retorno. Esto provoca un cortocircuito que puentea R₂, R₃, R₄ y R₅.`, formula: `Llave cerrada → cortocircuito` },
-        { text: `La corriente elige el camino de menor resistencia (0 Ω de la llave), por lo que no fluye corriente por el resto de los componentes.`, formula: `I(R₂) = I(R₃) = I(R₄) = I(R₅) = 0 A` },
-        { text: `La resistencia equivalente del circuito se reduce únicamente a R₁.`, formula: `R_eq = R₁ = ${r1} Ω` },
-        { text: `Calculamos la nueva corriente principal suministrada por la batería.`, formula: `I_total = V / R_eq = ${voltaje}V / ${r1}Ω = ${resultados.iTotal.toFixed(3)} A` }
-      ]
+      { text: `⚠️ LLAVE CERRADA: La llave conecta el nodo antes de R₂/R₃ directamente con el retorno. Esto provoca un cortocircuito que puentea R₂, R₃, R₄ y R₅.`, formula: `Llave cerrada → cortocircuito` },
+      { text: `La corriente elige el camino de menor resistencia (0 Ω de la llave), por lo que no fluye corriente por el resto de los componentes.`, formula: `I(R₂) = I(R₃) = I(R₄) = I(R₅) = 0 A` },
+      { text: `La resistencia equivalente del circuito se reduce únicamente a R₁.`, formula: `R_eq = R₁ = ${r1} Ω` },
+      { text: `Calculamos la nueva corriente principal suministrada por la batería.`, formula: `I_total = V / R_eq = ${voltaje}V / ${r1}Ω = ${resultados.iTotal.toFixed(3)} A` }
+    ]
     : cortocircuitoB
-    ? [
+      ? [
         { text: `⚠️ CORTOCIRCUITO en ${rCortaB}: su resistencia es 0 Ω. Actúa como conductor perfecto entre los nodos del paralelo.`, formula: `${rCortaB} = 0 Ω → cortocircuito` },
         { text: `El voltaje en los nodos del paralelo cae a 0 V, por lo que ${rAbiertaB} no recibe tensión y su corriente es 0 A.`, formula: `V_nodos = 0 V  →  I(${rAbiertaB}) = 0 A` },
         { text: `La resistencia equivalente del paralelo es 0 Ω. El circuito simplificado es: R₁ + 0 + R₄ + R₅.`, formula: `R_eq = R₁ + 0 + R₄ + R₅ = ${r1} + 0 + ${r4} + ${r5} = ${resultados.req.toFixed(2)} Ω` },
         { text: "Calculamos la corriente total que suministra la batería.", formula: `I_total = V / R_eq = ${voltaje}V / ${resultados.req.toFixed(2)}Ω = ${resultados.iTotal.toFixed(3)} A` },
         { text: `Toda la corriente fluye por ${rCortaB} (cortocircuito). R₁, R₄ y R₅ conducen I_total en serie.`, formula: `I(${rCortaB}) = I_total = ${iRCortaB.toFixed(3)} A   |   I(${rAbiertaB}) = 0 A` }
       ]
-    : [
+      : [
         { text: "R₂ y R₃ están en paralelo entre sí. Se reducen a un valor equivalente.", formula: `R₂₃ = (R₂ · R₃) / (R₂ + R₃) = (${r2} · ${r3}) / (${r2} + ${r3}) = ${resultados.rGroupParallel?.toFixed(2)} Ω` },
         { text: "El circuito equivalente queda con R₁, R₂₃, R₄ y R₅ conectadas en serie.", formula: `R_eq = R₁ + R₂₃ + R₄ + R₅` },
         { text: `Simplificamos la suma para hallar la resistencia equivalente total.`, formula: `R_eq = ${r1}Ω + ${resultados.rGroupParallel?.toFixed(2)}Ω + ${r4}Ω + ${r5}Ω = ${resultados.req.toFixed(2)} Ω` },
@@ -302,13 +302,13 @@ export default function SimuladorCircuitos({ volverAlMenu }: SimuladorCircuitosP
         icon: "🔋",
         value: voltaje,
         setValue: setVoltaje,
-        min: 1,
-        max: 60,
+        min: -50,
+        max: 50,
         unit: "V",
         params: [
-          { label: "Voltaje total (V)", value: `${voltaje} V` },
-          { label: "Corriente total (I₁)", value: `${resultados.iTotal.toFixed(3)} A` },
-          { label: "Energía total entregada", value: `${(voltaje * resultados.iTotal).toFixed(2)} Watts` }
+          { label: "Voltaje total (V)", value: `${Math.abs(voltaje)} V` },
+          { label: "Corriente total (I₁)", value: `${Math.abs(resultados.iTotal).toFixed(3)} A${resultados.iTotal < 0 ? " (⚠️ Invertida)" : ""}` },
+          { label: "Energía total entregada", value: `${Math.abs(voltaje * resultados.iTotal).toFixed(2)} Watts` }
         ]
       };
     }
@@ -351,8 +351,8 @@ export default function SimuladorCircuitos({ volverAlMenu }: SimuladorCircuitosP
       unit: "Ω",
       params: [
         { label: "Resistencia (R)", value: `${rVal} Ω` },
-        { label: "Corriente individual (I)", value: `${iVal.toFixed(3)} A` },
-        { label: "Caída de potencial (V)", value: `${(iVal * rVal).toFixed(2)} V` },
+        { label: "Corriente individual (I)", value: `${Math.abs(iVal).toFixed(3)} A${iVal < 0 ? " (⚠️ invertida)" : ""}` },
+        { label: "Caída de potencial (V)", value: `${Math.abs(iVal * rVal).toFixed(2)} V` },
         { label: "Calor disipado (P)", value: `${(iVal * iVal * rVal).toFixed(2)} W (Efecto joule)` }
       ]
     };
@@ -411,8 +411,8 @@ export default function SimuladorCircuitos({ volverAlMenu }: SimuladorCircuitosP
             <button
               onClick={() => { setCircuitoActivo("a"); setPasoActual(0); setSelectedResistor(null); }}
               className={`p-5 rounded-2xl border text-left cursor-pointer transition-all flex flex-col justify-between ${circuitoActivo === "a"
-                  ? "border-indigo-600 bg-indigo-50/20 shadow-md shadow-indigo-600/5"
-                  : "border-slate-200 hover:border-slate-300 bg-white"
+                ? "border-indigo-600 bg-indigo-50/20 shadow-md shadow-indigo-600/5"
+                : "border-slate-200 hover:border-slate-300 bg-white"
                 }`}
             >
               <div>
@@ -427,8 +427,8 @@ export default function SimuladorCircuitos({ volverAlMenu }: SimuladorCircuitosP
             <button
               onClick={() => { setCircuitoActivo("b"); setPasoActual(0); setSelectedResistor(null); }}
               className={`p-5 rounded-2xl border text-left cursor-pointer transition-all flex flex-col justify-between ${circuitoActivo === "b"
-                  ? "border-indigo-600 bg-indigo-50/20 shadow-md shadow-indigo-600/5"
-                  : "border-slate-200 hover:border-slate-300 bg-white"
+                ? "border-indigo-600 bg-indigo-50/20 shadow-md shadow-indigo-600/5"
+                : "border-slate-200 hover:border-slate-300 bg-white"
                 }`}
             >
               <div>
@@ -492,12 +492,18 @@ export default function SimuladorCircuitos({ volverAlMenu }: SimuladorCircuitosP
                     <rect x="22" y="195" width="66" height="70" className="resistor-bg" />
                     <rect x="30" y="210" width="50" height="40" rx="6" fill="#22c55e" stroke="#1e293b" strokeWidth="2" />
                     {/* Polarity indicators */}
-                    <circle cx="55" cy="195" r="8" fill="#ef4444" className="stroke-white" strokeWidth="1" />
-                    <text x="55" y="198" textAnchor="middle" fill="white" className="text-xs font-black font-sans">+</text>
-                    <circle cx="55" cy="265" r="8" fill="#3b82f6" className="stroke-white" strokeWidth="1" />
-                    <text x="55" y="268" textAnchor="middle" fill="white" className="text-xs font-black font-sans">-</text>
+                    <circle cx="55" cy={voltaje < 0 ? 265 : 195} r="8" fill="#ef4444" className="stroke-white" strokeWidth="1" />
+                    <text x="55" y={voltaje < 0 ? 268 : 198} textAnchor="middle" fill="white" className="text-xs font-black font-sans">+</text>
+                    <circle cx="55" cy={voltaje < 0 ? 195 : 265} r="8" fill="#3b82f6" className="stroke-white" strokeWidth="1" />
+                    <text x="55" y={voltaje < 0 ? 198 : 268} textAnchor="middle" fill="white" className="text-xs font-black font-sans">-</text>
 
-                    <text x="55" y="234" textAnchor="middle" fill="white" className="font-mono text-xs font-bold">{voltaje}V</text>
+                    <text x="55" y="234" textAnchor="middle" fill="white" className="font-mono text-xs font-bold">{Math.abs(voltaje)}V</text>
+                    {voltaje < 0 && (
+                      <g className="pointer-events-none select-none">
+                        <rect x="95" y="215" width="70" height="16" rx="4" fill="#fef3c7" stroke="#f59e0b" strokeWidth="1" />
+                        <text x="130" y="226" textAnchor="middle" fill="#d97706" fontSize="9" fontWeight="bold">⚠️ Invertida</text>
+                      </g>
+                    )}
                     <text x="55" y="260" textAnchor="middle" fill="#1e293b" className="text-[10px] font-bold">Batería</text>
                   </g>
 
@@ -591,12 +597,18 @@ export default function SimuladorCircuitos({ volverAlMenu }: SimuladorCircuitosP
                     <rect x="22" y="195" width="66" height="70" className="resistor-bg" />
                     <rect x="30" y="210" width="50" height="40" rx="6" fill="url(#batteryGradB)" stroke="#2c3e50" strokeWidth="2" />
                     {/* Polarity indicators */}
-                    <circle cx="55" cy="195" r="8" fill="#ef4444" className="stroke-white" strokeWidth="1" />
-                    <text x="55" y="198" textAnchor="middle" fill="white" className="text-xs font-black font-sans">+</text>
-                    <circle cx="55" cy="265" r="8" fill="#3b82f6" className="stroke-white" strokeWidth="1" />
-                    <text x="55" y="268" textAnchor="middle" fill="white" className="text-xs font-black font-sans">-</text>
+                    <circle cx="55" cy={voltaje < 0 ? 265 : 195} r="8" fill="#ef4444" className="stroke-white" strokeWidth="1" />
+                    <text x="55" y={voltaje < 0 ? 268 : 198} textAnchor="middle" fill="white" className="text-xs font-black font-sans">+</text>
+                    <circle cx="55" cy={voltaje < 0 ? 195 : 265} r="8" fill="#3b82f6" className="stroke-white" strokeWidth="1" />
+                    <text x="55" y={voltaje < 0 ? 198 : 268} textAnchor="middle" fill="white" className="text-xs font-black font-sans">-</text>
 
-                    <text x="55" y="234" textAnchor="middle" fill="white" fontSize="13" fontWeight="bold">{voltaje}V</text>
+                    <text x="55" y="234" textAnchor="middle" fill="white" fontSize="13" fontWeight="bold">{Math.abs(voltaje)}V</text>
+                    {voltaje < 0 && (
+                      <g className="pointer-events-none select-none">
+                        <rect x="95" y="215" width="70" height="16" rx="4" fill="#fef3c7" stroke="#f59e0b" strokeWidth="1" />
+                        <text x="130" y="226" textAnchor="middle" fill="#d97706" fontSize="9" fontWeight="bold">⚠️ Polaridad Invertida</text>
+                      </g>
+                    )}
                     <text x="55" y="260" textAnchor="middle" fill="#2c3e50" fontSize="10" fontWeight="bold">Batería</text>
                   </g>
 
@@ -728,25 +740,25 @@ export default function SimuladorCircuitos({ volverAlMenu }: SimuladorCircuitosP
             </div>
           )}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="bg-white border rounded-2xl p-5 shadow-sm border-l-4 border-indigo-600 flex items-center gap-5">
-            <span className="text-3xl text-indigo-600 font-mono">Ω</span>
-            <div>
-              <span className="text-xs text-slate-400 font-bold block">RESISTENCIA EQUIVALENTE</span>
-              <strong className="text-2xl font-display font-black text-slate-800">
-                {resultados.req.toFixed(2)} <span className="text-xs text-slate-400 font-medium">Ω</span>
-              </strong>
+            <div className="bg-white border rounded-2xl p-5 shadow-sm border-l-4 border-indigo-600 flex items-center gap-5">
+              <span className="text-3xl text-indigo-600 font-mono">Ω</span>
+              <div>
+                <span className="text-xs text-slate-400 font-bold block">RESISTENCIA EQUIVALENTE</span>
+                <strong className="text-2xl font-display font-black text-slate-800">
+                  {resultados.req.toFixed(2)} <span className="text-xs text-slate-400 font-medium">Ω</span>
+                </strong>
+              </div>
             </div>
-          </div>
 
-          <div className="bg-white border rounded-2xl p-5 shadow-sm border-l-4 border-violet-600 flex items-center gap-5">
-            <span className="text-3xl text-violet-600 font-mono">I</span>
-            <div>
-              <span className="text-xs text-slate-400 font-bold block">CORRIENTE TOTAL (I₁)</span>
-              <strong className="text-2xl font-display font-black text-slate-800">
-                {resultados.iTotal.toFixed(3)} <span className="text-xs text-slate-400 font-medium">A</span>
-              </strong>
+            <div className="bg-white border rounded-2xl p-5 shadow-sm border-l-4 border-violet-600 flex items-center gap-5">
+              <span className="text-3xl text-violet-600 font-mono">I</span>
+              <div>
+                <span className="text-xs text-slate-400 font-bold block">CORRIENTE TOTAL (I₁)</span>
+                <strong className="text-2xl font-display font-black text-slate-800">
+                  {Math.abs(resultados.iTotal).toFixed(3)} <span className="text-xs text-slate-400 font-medium">A</span>
+                </strong>
+              </div>
             </div>
-          </div>
           </div>
         </section>
 

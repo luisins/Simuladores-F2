@@ -158,7 +158,7 @@ export default function ManualUso({ tipo = "metal", onClose }: ManualUsoProps) {
                   <div className="flex gap-4 items-start">
                     <span className="w-6 h-6 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold text-xs flex-shrink-0 mt-0.5">4</span>
                     <p>
-                      <strong>Inversión de polaridad:</strong> Si reduces el voltaje de la batería por debajo de 0V, los polos se invertirán visualmente (+ abajo, - arriba). La corriente empezará a fluir en sentido opuesto, reflejándose instantáneamente en todas las animaciones del circuito.
+                      <strong>Inversión de polaridad:</strong> Si reduces el voltaje de la batería por debajo de 0V, los polos se invertirán visualmente (+ abajo, - arriba). La corriente empezará a fluir en sentido opuesto y aparecerá la etiqueta <strong>⚠️ Invertida</strong>, reflejándose instantáneamente en todas las animaciones del circuito.
                     </p>
                   </div>
                 </div>
@@ -286,10 +286,10 @@ export default function ManualUso({ tipo = "metal", onClose }: ManualUsoProps) {
                     </p>
                   </div>
 
-                  <div className="bg-indigo-50 border-l-4 border-indigo-500 p-4 rounded-r-xl">
-                    <span className="font-bold text-indigo-900 block mb-1">↺ Representación visual de corriente negativa</span>
-                    <p className="text-indigo-800">
-                      Cuando una corriente de rama resulta negativa, el simulador muestra un <strong>círculo amarillo con flecha (↺)</strong> sobre esa rama del diagrama. Este ícono indica que el flujo animado visible es el sentido supuesto, pero la corriente física real circula en dirección contraria. El valor numérico aparece en color naranja en los resultados con la indicación "🔀 Sentido opuesto al supuesto".
+                  <div className="bg-amber-50 border-l-4 border-amber-400 p-4 rounded-r-xl">
+                    <span className="font-bold text-amber-900 block mb-1">⚠️ Etiqueta de aviso visual de corriente negativa</span>
+                    <p className="text-amber-800">
+                      Cuando una corriente de rama resulta negativa, el simulador superpone una etiqueta estática de aviso <strong>(⚠️ Invertida)</strong> sobre esa rama del diagrama. Esto te permite saber de un vistazo que la corriente física real circula en dirección contraria al sentido de animación propuesto matemáticamente.
                     </p>
                   </div>
 

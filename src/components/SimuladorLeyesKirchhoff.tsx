@@ -164,7 +164,7 @@ export default function SimuladorLeyesKirchhoff({ volverAlMenu }: SimuladorLeyes
       unit: "Ω",
       params: [
         { label: "Resistencia (R)", value: `${rVal} Ω${rVal === 0 ? " — CORTOCIRCUITO" : ""}` },
-        { label: "Corriente promedio (I)", value: `${Math.abs(iVal).toFixed(4)} A${iVal < 0 ? " (↺ inverso)" : ""}` },
+        { label: "Corriente promedio (I)", value: `${Math.abs(iVal).toFixed(4)} A${iVal < 0 ? " (⚠️ invertida)" : ""}` },
         { label: "Caída de potencial (V)", value: `${Math.abs(vVal).toFixed(2)} V` },
         { label: "Calor disipado (P)", value: `${pVal.toFixed(3)} W` }
       ]
@@ -265,9 +265,9 @@ export default function SimuladorLeyesKirchhoff({ volverAlMenu }: SimuladorLeyes
                 <path d="M 215 100 H 260" className={getFlowClass(i0, "wire0")} style={getVelocityStyle(i0)} />
                 {/* Indicador visual de inversión I0 */}
                 {sistemaDeterminado && i0 < -0.001 && (
-                  <g>
-                    <circle cx="60" cy="145" r="10" fill="#f59e0b" opacity="0.9" />
-                    <text x="60" y="149" textAnchor="middle" fill="white" fontSize="12" fontWeight="bold">↺</text>
+                  <g className="pointer-events-none select-none">
+                    <rect x="25" y="137" width="70" height="16" rx="4" fill="#fef3c7" stroke="#f59e0b" strokeWidth="1" />
+                    <text x="60" y="148" textAnchor="middle" fill="#d97706" fontSize="9" fontWeight="bold">⚠️ Invertida</text>
                   </g>
                 )}
 
@@ -275,9 +275,9 @@ export default function SimuladorLeyesKirchhoff({ volverAlMenu }: SimuladorLeyes
                 <path d="M 260 320 V 270" className={getFlowClass(i1, "wire1")} style={getVelocityStyle(i1)} />
                 <path d="M 260 125 V 100" className={getFlowClass(i1, "wire1")} style={getVelocityStyle(i1)} />
                 {sistemaDeterminado && i1 < -0.001 && (
-                  <g>
-                    <circle cx="260" cy="295" r="10" fill="#f59e0b" opacity="0.9" />
-                    <text x="260" y="299" textAnchor="middle" fill="white" fontSize="12" fontWeight="bold">↺</text>
+                  <g className="pointer-events-none select-none">
+                    <rect x="225" y="287" width="70" height="16" rx="4" fill="#fef3c7" stroke="#f59e0b" strokeWidth="1" />
+                    <text x="260" y="298" textAnchor="middle" fill="#d97706" fontSize="9" fontWeight="bold">⚠️ Invertida</text>
                   </g>
                 )}
 
@@ -287,9 +287,9 @@ export default function SimuladorLeyesKirchhoff({ volverAlMenu }: SimuladorLeyes
                 <path d="M 490 255 V 320 H 425" className={getFlowClass(i2, "wire2")} style={getVelocityStyle(i2)} />
                 <path d="M 335 320 H 260" className={getFlowClass(i2, "wire2")} style={getVelocityStyle(i2)} />
                 {sistemaDeterminado && i2 < -0.001 && (
-                  <g>
-                    <circle cx="490" cy="145" r="10" fill="#f59e0b" opacity="0.9" />
-                    <text x="490" y="149" textAnchor="middle" fill="white" fontSize="12" fontWeight="bold">↺</text>
+                  <g className="pointer-events-none select-none">
+                    <rect x="455" y="137" width="70" height="16" rx="4" fill="#fef3c7" stroke="#f59e0b" strokeWidth="1" />
+                    <text x="490" y="148" textAnchor="middle" fill="#d97706" fontSize="9" fontWeight="bold">⚠️ Invertida</text>
                   </g>
                 )}
 
@@ -533,7 +533,7 @@ export default function SimuladorLeyesKirchhoff({ volverAlMenu }: SimuladorLeyes
                     D = (R₁₄ · (R₃ + R₂₅)) + (R₃ · R₂₅) = {D.toFixed(1)}
                   </div>
                   <div className="text-[10px] text-slate-500 mt-2">
-                    DI₀ = ({e2 - e1})·(-{R3 + R25}) - ({R3})·({-(e2 + e3)}) = {DI0.toFixed(1)}<br/>
+                    DI₀ = ({e2 - e1})·(-{R3 + R25}) - ({R3})·({-(e2 + e3)}) = {DI0.toFixed(1)}<br />
                     DI₁ = (-{R14})·({-(e2 + e3)}) - ({e2 - e1})·(-{R25}) = {DI1.toFixed(1)}
                   </div>
                 </div>
