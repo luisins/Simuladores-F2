@@ -44,7 +44,7 @@ export default function ManualUso({ tipo = "metal", onClose }: ManualUsoProps) {
                         <strong>Circuito original 5a:</strong> Configuración compleja donde un grupo en serie (R₁ + R₄ + R₅) opera en paralelo absoluto con R₃, sumándose en serie principal a R₂ y R₆.
                       </li>
                       <li>
-                        <strong>Circuito original 5b:</strong> Configuración clásica donde un paralelo directo (R₂ || R₃) se acopla en serie con R₁, R₄ y R₅.
+                        <strong>Circuito original 5b:</strong> Configuración clásica donde un paralelo directo (R₂ || R₃) se acopla en serie con R₁, R₄ y R₅. Incluye una <strong>llave (S)</strong> que conecta el terminal izquierdo de R₃ con la línea de retorno; al cerrarla, se produce un <strong>bypass completo</strong> de R₂, R₃, R₄ y R₅, circulando corriente solo por R₁.
                       </li>
                     </ul>
                   </div>
@@ -121,7 +121,7 @@ export default function ManualUso({ tipo = "metal", onClose }: ManualUsoProps) {
                   Cómo Utilizar el Simulador Red de Resistencias
                 </h2>
 
-                <div className="space-y-4 text-sm text-slate-600">
+              <div className="space-y-4 text-sm text-slate-600">
                   <div className="flex gap-4 items-start">
                     <span className="w-6 h-6 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold text-xs flex-shrink-0 mt-0.5">1</span>
                     <p>
@@ -134,6 +134,18 @@ export default function ManualUso({ tipo = "metal", onClose }: ManualUsoProps) {
                     <p>
                       <strong>Edición de Componentes:</strong> Haz clic en cualquier resistencia o la batería del esquema. Se seleccionará con un resplandor azul y se abrirán controles deslizantes dinámicos para ajustar su valor en tiempo real.
                     </p>
+                  </div>
+
+                  <div className="flex gap-4 items-start">
+                    <span className="w-6 h-6 bg-amber-500 text-white rounded-full flex items-center justify-center font-bold text-xs flex-shrink-0 mt-0.5">🔑</span>
+                    <p>
+                      <strong>Llave (solo Circuito B):</strong> En el circuito 5b verás una llave <em>S</em> entre el terminal izquierdo de R₃ y el retorno. Al <strong>cerrarla</strong>, se crea un puente conductor directo que realiza un bypass absoluto del paralelo (R₂ || R₃) y de R₄ y R₅. En este estado, la corriente solo fluye por R₁ y regresa inmediatamente a la batería (I = 0 A en R₂, R₃, R₄ y R₅). Puedes abrir/cerrar la llave con el botón o directamente haciendo clic sobre ella en el diagrama.
+                    </p>
+                  </div>
+
+                  <div className="bg-amber-50 border-l-4 border-amber-400 rounded-r-xl p-4 text-xs text-amber-900">
+                    <strong className="block mb-1">¿Qué pasa físicamente al cerrar la llave?</strong>
+                    <p>El cable de la llave cerrada conecta el terminal de salida de R₁ directamente al borne negativo de la batería, ofreciendo una trayectoria de resistencia nula (cortocircuito / bypass). Al no existir resistencia en esta ruta, la caída de tensión en el resto de la red (R₂, R₃, R₄, R₅) cae a 0 V, anulando completamente el flujo de corriente en esos componentes.</p>
                   </div>
 
                   <div className="flex gap-4 items-start">
@@ -255,7 +267,7 @@ export default function ManualUso({ tipo = "metal", onClose }: ManualUsoProps) {
                   Operación y Signos en Kirchhoff
                 </h2>
 
-                <div className="space-y-4 text-xs text-slate-600 leading-relaxed">
+              <div className="space-y-4 text-xs text-slate-600 leading-relaxed">
                   <p>
                     Este simulador científico automatiza no solo el cálculo, sino también la detección de corrientes de signo invertido.
                   </p>
@@ -267,11 +279,29 @@ export default function ManualUso({ tipo = "metal", onClose }: ManualUsoProps) {
                     </p>
                   </div>
 
+                  <div className="bg-indigo-50 border-l-4 border-indigo-500 p-4 rounded-r-xl">
+                    <span className="font-bold text-indigo-900 block mb-1">↺ Representación visual de corriente negativa</span>
+                    <p className="text-indigo-800">
+                      Cuando una corriente de rama resulta negativa, el simulador muestra un <strong>círculo amarillo con flecha (↺)</strong> sobre esa rama del diagrama. Este ícono indica que el flujo animado visible es el sentido supuesto, pero la corriente física real circula en dirección contraria. El valor numérico aparece en color naranja en los resultados con la indicación "🔀 Sentido opuesto al supuesto".
+                    </p>
+                  </div>
+
+                  <div className="bg-slate-50 border-l-4 border-slate-400 p-4 rounded-r-xl">
+                    <span className="font-bold text-slate-800 block mb-1">🔌 Resistencias en 0 Ω (llave cerrada / cortocircuito)</span>
+                    <p>
+                      Puedes llevar cualquier resistencia a <strong>0 Ω</strong> usando el control deslizante (al hacer clic sobre la resistencia en el diagrama). Esto equivale a sustituir esa resistencia por un cable conductor ideal: la rama queda en cortocircuito. El cálculo de Cramer se actualiza automáticamente y el panel de resultados indica —CORTOCIRCUITO.
+                    </p>
+                    <p className="mt-2 text-amber-700 font-semibold">
+                      ⚠️ Si al poner varias resistencias en 0 el determinante D del sistema se anula, el simulador detecta el sistema indeterminado y muestra la advertencia “D=0”.
+                    </p>
+                  </div>
+
                   <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
                     <span className="font-bold text-slate-800 block mb-1">Cómo experimentar:</span>
                     <ul className="list-disc pl-5 space-y-1 mt-1">
                       <li>Haz clic en cualquiera de las tres fuentes (E₁, E₂ o E₃) del esquema e incrementa sus valores. Mira cómo cambia la corriente.</li>
                       <li>Cambia el flujo del circuito a "Flujo de electrones" para ver las partículas de color rojo moviéndose realmente de negativo a positivo.</li>
+                      <li>Lleva una resistencia a 0 Ω para simular un cortocircuito en esa rama y observa cómo se redistribuyen las corrientes en el resto del circuito.</li>
                     </ul>
                   </div>
                 </div>

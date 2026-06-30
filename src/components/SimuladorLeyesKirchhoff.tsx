@@ -35,6 +35,7 @@ export default function SimuladorLeyesKirchhoff({ volverAlMenu }: SimuladorLeyes
   };
 
   // Resolutor por Regla de Cramer (Matricial 2x2)
+  // Si alguna resistencia es 0, se la trata como conductor ideal (cortocircuito).
   const R14 = r1 + r4;
   const R25 = r2 + r5;
   const R3 = r3;
@@ -44,8 +45,10 @@ export default function SimuladorLeyesKirchhoff({ volverAlMenu }: SimuladorLeyes
   const DI0 = ((e2 - e1) * -(R3 + R25)) - (R3 * -(e2 + e3));
   const DI1 = (-R14 * -(e2 + e3)) - ((e2 - e1) * -R25);
 
-  const i0 = DI0 / D;
-  const i1 = DI1 / D;
+  // Si D = 0, el sistema es indeterminado (cabe con resistencias todas 0)
+  const sistemaDeterminado = Math.abs(D) > 1e-10;
+  const i0 = sistemaDeterminado ? DI0 / D : 0;
+  const i1 = sistemaDeterminado ? DI1 / D : 0;
   const i2 = i0 + i1;
 
   // Diferencia de potencial Vb - Va
@@ -156,12 +159,12 @@ export default function SimuladorLeyesKirchhoff({ volverAlMenu }: SimuladorLeyes
       icon: "⚡",
       value: rVal,
       setValue: setRVal,
-      min: 1,
+      min: 0,
       max: 100,
       unit: "Ω",
       params: [
-        { label: "Resistencia (R)", value: `${rVal} Ω` },
-        { label: "Corriente promedio (I)", value: `${Math.abs(iVal).toFixed(4)} A` },
+        { label: "Resistencia (R)", value: `${rVal} Ω${rVal === 0 ? " — CORTOCIRCUITO" : ""}` },
+        { label: "Corriente promedio (I)", value: `${Math.abs(iVal).toFixed(4)} A${iVal < 0 ? " (↺ inverso)" : ""}` },
         { label: "Caída de potencial (V)", value: `${Math.abs(vVal).toFixed(2)} V` },
         { label: "Calor disipado (P)", value: `${pVal.toFixed(3)} W` }
       ]
@@ -238,28 +241,57 @@ export default function SimuladorLeyesKirchhoff({ volverAlMenu }: SimuladorLeyes
             <div className="circuito-a-original relative">
               <svg viewBox="0 0 550 400" className="circuit-svg-original">
                 {/* Wires */}
-                <path d="M 60 210 V 100 H 130" className="wire-base" />
-                <path d="M 210 100 H 260" className="wire-base" />
-                <path d="M 260 100 V 210" className="wire-base" />
-                <path d="M 260 240 V 320" className="wire-base" />
-                <path d="M 260 100 H 340" className="wire-base" />
-                <path d="M 420 100 H 490 V 210" className="wire-base" />
-                <path d="M 490 245 V 320 H 260" className="wire-base" />
-                <path d="M 260 320 H 60 V 250" className="wire-base" />
+                {/* Left Branch */}
+                <path d="M 60 195 V 100 H 125" className="wire-base" />
+                <path d="M 215 100 H 260" className="wire-base" />
+                <path d="M 260 320 H 215" className="wire-base" />
+                <path d="M 125 320 H 60 V 255" className="wire-base" />
+
+                {/* Central Branch */}
+                <path d="M 260 100 V 125" className="wire-base" />
+                <path d="M 260 270 V 320" className="wire-base" />
+
+                {/* Right Branch */}
+                <path d="M 260 100 H 335" className="wire-base" />
+                <path d="M 425 100 H 490 V 195" className="wire-base" />
+                <path d="M 490 255 V 320 H 425" className="wire-base" />
+                <path d="M 335 320 H 260" className="wire-base" />
 
                 {/* Animated flows proportional to currents */}
                 {/* Left Branch (I0) */}
-                <path d="M 60 210 V 100 H 130" className={getFlowClass(i0, "wire0")} style={getVelocityStyle(i0)} />
-                <path d="M 260 320 H 60 V 250" className={getFlowClass(i0, "wire0")} style={getVelocityStyle(i0)} />
+                <path d="M 260 320 H 215" className={getFlowClass(i0, "wire0")} style={getVelocityStyle(i0)} />
+                <path d="M 125 320 H 60 V 255" className={getFlowClass(i0, "wire0")} style={getVelocityStyle(i0)} />
+                <path d="M 60 195 V 100 H 125" className={getFlowClass(i0, "wire0")} style={getVelocityStyle(i0)} />
+                <path d="M 215 100 H 260" className={getFlowClass(i0, "wire0")} style={getVelocityStyle(i0)} />
+                {/* Indicador visual de inversión I0 */}
+                {sistemaDeterminado && i0 < -0.001 && (
+                  <g>
+                    <circle cx="60" cy="145" r="10" fill="#f59e0b" opacity="0.9" />
+                    <text x="60" y="149" textAnchor="middle" fill="white" fontSize="12" fontWeight="bold">↺</text>
+                  </g>
+                )}
 
                 {/* Central Branch (I1) */}
-                <path d="M 260 320 V 240" className={getFlowClass(i1, "wire1")} style={getVelocityStyle(i1)} />
-                <path d="M 260 210 V 100" className={getFlowClass(i1, "wire1")} style={getVelocityStyle(i1)} />
+                <path d="M 260 320 V 270" className={getFlowClass(i1, "wire1")} style={getVelocityStyle(i1)} />
+                <path d="M 260 125 V 100" className={getFlowClass(i1, "wire1")} style={getVelocityStyle(i1)} />
+                {sistemaDeterminado && i1 < -0.001 && (
+                  <g>
+                    <circle cx="260" cy="295" r="10" fill="#f59e0b" opacity="0.9" />
+                    <text x="260" y="299" textAnchor="middle" fill="white" fontSize="12" fontWeight="bold">↺</text>
+                  </g>
+                )}
 
                 {/* Right Branch (I2) */}
-                <path d="M 260 100 H 340" className={getFlowClass(i2, "wire2")} style={getVelocityStyle(i2)} />
-                <path d="M 420 100 H 490 V 210" className={getFlowClass(i2, "wire2")} style={getVelocityStyle(i2)} />
-                <path d="M 490 245 V 320 H 260" className={getFlowClass(i2, "wire2")} style={getVelocityStyle(i2)} />
+                <path d="M 260 100 H 335" className={getFlowClass(i2, "wire2")} style={getVelocityStyle(i2)} />
+                <path d="M 425 100 H 490 V 195" className={getFlowClass(i2, "wire2")} style={getVelocityStyle(i2)} />
+                <path d="M 490 255 V 320 H 425" className={getFlowClass(i2, "wire2")} style={getVelocityStyle(i2)} />
+                <path d="M 335 320 H 260" className={getFlowClass(i2, "wire2")} style={getVelocityStyle(i2)} />
+                {sistemaDeterminado && i2 < -0.001 && (
+                  <g>
+                    <circle cx="490" cy="145" r="10" fill="#f59e0b" opacity="0.9" />
+                    <text x="490" y="149" textAnchor="middle" fill="white" fontSize="12" fontWeight="bold">↺</text>
+                  </g>
+                )}
 
                 {/* Nodes nodes */}
                 <circle cx="260" cy="100" r="5" fill="#1e293b" />
@@ -429,6 +461,11 @@ export default function SimuladorLeyesKirchhoff({ volverAlMenu }: SimuladorLeyes
                 {r.negative && (
                   <span className="text-[9px] text-amber-500 font-bold block leading-relaxed">
                     🔀 Sentido opuesto al supuesto
+                  </span>
+                )}
+                {!sistemaDeterminado && (
+                  <span className="text-[9px] text-red-500 font-bold block leading-relaxed">
+                    ⚠️ Sistema indeterminado (D=0)
                   </span>
                 )}
               </div>

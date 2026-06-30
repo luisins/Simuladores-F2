@@ -16,6 +16,7 @@ export default function SimuladorCircuitos({ volverAlMenu }: SimuladorCircuitosP
   const [r4, setR4] = useState<number>(10);
   const [r5, setR5] = useState<number>(10);
   const [r6, setR6] = useState<number>(10);
+  const [llaveB, setLlaveB] = useState<boolean>(false);
 
   const [circuitoActivo, setCircuitoActivo] = useState<CircuitType>("a");
   const [mostrarExplicacion, setMostrarExplicacion] = useState<boolean>(true);
@@ -32,6 +33,7 @@ export default function SimuladorCircuitos({ volverAlMenu }: SimuladorCircuitosP
     setR4(15);
     setR5(30);
     setR6(10);
+    setLlaveB(false);
     setSelectedResistor(null);
   };
 
@@ -90,6 +92,24 @@ export default function SimuladorCircuitos({ volverAlMenu }: SimuladorCircuitosP
 
   // Cálculos para circuito (b)
   const calcularCircuitoB = (): ResistorStats => {
+    if (llaveB) {
+      const req = r1;
+      const iTotal = req > 0 ? voltaje / req : 0;
+      return {
+        req,
+        iTotal,
+        iR1: iTotal,
+        iR2: 0,
+        iR3: 0,
+        iR4: 0,
+        iR5: 0,
+        iR6: 0,
+        rGroupParallel: 0,
+        vGroupParallel: 0,
+        verificacion: true
+      };
+    }
+
     let r23 = 0;
     let i2 = 0;
     let i3 = 0;
@@ -168,7 +188,14 @@ export default function SimuladorCircuitos({ volverAlMenu }: SimuladorCircuitosP
   const rCortaB = cortocircuitoB_R2 ? "R₂" : "R₃";
   const rAbiertaB = cortocircuitoB_R2 ? "R₃" : "R₂";
   const iRCortaB = cortocircuitoB_R2 ? resultados.iR2 : resultados.iR3;
-  const pasosB = cortocircuitoB
+  const pasosB = llaveB
+    ? [
+        { text: `⚠️ LLAVE CERRADA: La llave conecta el nodo antes de R₂/R₃ directamente con el retorno. Esto provoca un cortocircuito que puentea R₂, R₃, R₄ y R₅.`, formula: `Llave cerrada → cortocircuito` },
+        { text: `La corriente elige el camino de menor resistencia (0 Ω de la llave), por lo que no fluye corriente por el resto de los componentes.`, formula: `I(R₂) = I(R₃) = I(R₄) = I(R₅) = 0 A` },
+        { text: `La resistencia equivalente del circuito se reduce únicamente a R₁.`, formula: `R_eq = R₁ = ${r1} Ω` },
+        { text: `Calculamos la nueva corriente principal suministrada por la batería.`, formula: `I_total = V / R_eq = ${voltaje}V / ${r1}Ω = ${resultados.iTotal.toFixed(3)} A` }
+      ]
+    : cortocircuitoB
     ? [
         { text: `⚠️ CORTOCIRCUITO en ${rCortaB}: su resistencia es 0 Ω. Actúa como conductor perfecto entre los nodos del paralelo.`, formula: `${rCortaB} = 0 Ω → cortocircuito` },
         { text: `El voltaje en los nodos del paralelo cae a 0 V, por lo que ${rAbiertaB} no recibe tensión y su corriente es 0 A.`, formula: `V_nodos = 0 V  →  I(${rAbiertaB}) = 0 A` },
@@ -528,7 +555,8 @@ export default function SimuladorCircuitos({ volverAlMenu }: SimuladorCircuitosP
                   <path d="M 220 100 H 260" className="wire-base" />
                   <path d="M 260 100 H 420" className="wire-base" />
                   <path d="M 260 100 V 210 H 420 V 100" className="wire-base" />
-                  <path d="M 420 100 H 500 V 320 H 55 V 250" className="wire-base" />
+                  <path d="M 420 100 H 500 V 320 H 260" className="wire-base" />
+                  <path d="M 260 320 H 55 V 250" className="wire-base" />
 
                   {/* Flow indicators */}
                   <path d="M 55 210 V 100 H 140" className={getFlowClass(resultados.iTotal, "wire-battery")} style={getVelocityStyle(resultados.iTotal)} />
@@ -536,10 +564,24 @@ export default function SimuladorCircuitos({ volverAlMenu }: SimuladorCircuitosP
                   <path d="M 220 100 H 260" className={getFlowClass(resultados.iTotal, "wire1")} style={getVelocityStyle(resultados.iTotal)} />
                   <path d="M 260 100 H 420" className={getFlowClass(resultados.iR2, "wire2")} style={getVelocityStyle(resultados.iR2)} />
                   <path d="M 260 100 V 210 H 420 V 100" className={getFlowClass(resultados.iR3, "wire23")} style={getVelocityStyle(resultados.iR3)} />
-                  <path d="M 420 100 H 500 V 320 H 55 V 250" className={getFlowClass(resultados.iTotal, "wire4")} style={getVelocityStyle(resultados.iTotal)} />
+                  <path d="M 420 100 H 500 V 320 H 260" className={getFlowClass(resultados.iR4, "wire4")} style={getVelocityStyle(resultados.iR4)} />
+                  <path d="M 260 320 H 55 V 250" className={getFlowClass(resultados.iTotal, "wire-return")} style={getVelocityStyle(resultados.iTotal)} />
+                  {llaveB && <path d="M 260 210 V 320" className={getFlowClass(resultados.iTotal, "wire-switch")} style={getVelocityStyle(resultados.iTotal)} />}
 
                   <circle cx="260" cy="100" r="5" fill="#2c3e50" />
                   <circle cx="420" cy="100" r="5" fill="#2c3e50" />
+
+                  {/* Switch LLAVE B */}
+                  <g className="cursor-pointer" onClick={() => setLlaveB(!llaveB)}>
+                    <circle cx="260" cy="210" r="4" fill="#1e293b" />
+                    <circle cx="260" cy="320" r="4" fill="#1e293b" />
+                    {llaveB ? (
+                      <line x1="260" y1="210" x2="260" y2="320" stroke="#3b82f6" strokeWidth="3" />
+                    ) : (
+                      <line x1="260" y1="210" x2="230" y2="280" stroke="#ef4444" strokeWidth="3" strokeLinecap="round" />
+                    )}
+                    <text x="235" y="260" className="text-[10px] font-bold" fill={llaveB ? "#3b82f6" : "#ef4444"}>Llave</text>
+                  </g>
 
                   {/* Component: Battery */}
                   <g
@@ -571,7 +613,7 @@ export default function SimuladorCircuitos({ volverAlMenu }: SimuladorCircuitosP
 
                   {/* R2 */}
                   <g
-                    className={`interactive-resistor ${selectedResistor === 'r2' ? 'selected' : ''} ${getHighlightClass('r2')}`}
+                    className={`interactive-resistor ${selectedResistor === 'r2' ? 'selected' : ''} ${getHighlightClass('r2')} ${llaveB ? 'opacity-30' : ''}`}
                     onClick={() => setSelectedResistor('r2')}
                   >
                     <rect x="295" y="75" width="90" height="50" className="resistor-bg" />
@@ -582,7 +624,7 @@ export default function SimuladorCircuitos({ volverAlMenu }: SimuladorCircuitosP
 
                   {/* R3 */}
                   <g
-                    className={`interactive-resistor ${selectedResistor === 'r3' ? 'selected' : ''} ${getHighlightClass('r3')}`}
+                    className={`interactive-resistor ${selectedResistor === 'r3' ? 'selected' : ''} ${getHighlightClass('r3')} ${llaveB ? 'opacity-30' : ''}`}
                     onClick={() => setSelectedResistor('r3')}
                   >
                     <rect x="295" y="185" width="90" height="50" className="resistor-bg" />
@@ -593,7 +635,7 @@ export default function SimuladorCircuitos({ volverAlMenu }: SimuladorCircuitosP
 
                   {/* R4 */}
                   <g
-                    className={`interactive-resistor ${selectedResistor === 'r4' ? 'selected' : ''} ${getHighlightClass('r4')}`}
+                    className={`interactive-resistor ${selectedResistor === 'r4' ? 'selected' : ''} ${getHighlightClass('r4')} ${llaveB ? 'opacity-30' : ''}`}
                     onClick={() => setSelectedResistor('r4')}
                   >
                     <rect x="475" y="165" width="50" height="90" className="resistor-bg" />
@@ -604,13 +646,13 @@ export default function SimuladorCircuitos({ volverAlMenu }: SimuladorCircuitosP
 
                   {/* R5 */}
                   <g
-                    className={`interactive-resistor ${selectedResistor === 'r5' ? 'selected' : ''} ${getHighlightClass('r5')}`}
+                    className={`interactive-resistor ${selectedResistor === 'r5' ? 'selected' : ''} ${getHighlightClass('r5')} ${llaveB ? 'opacity-30' : ''}`}
                     onClick={() => setSelectedResistor('r5')}
                   >
-                    <rect x="235" y="295" width="90" height="50" className="resistor-bg" />
-                    <path d={drawHorizontalResistor(280, 320, 80)} className="resistor-path" />
-                    <text x="280" y="305" textAnchor="middle" className="text-xs font-bold" fill="#1e293b">R₅</text>
-                    <text x="280" y="340" textAnchor="middle" className="text-[10px] font-mono fill-slate-400">{r5}Ω</text>
+                    <rect x="295" y="295" width="90" height="50" className="resistor-bg" />
+                    <path d={drawHorizontalResistor(340, 320, 80)} className="resistor-path" />
+                    <text x="340" y="305" textAnchor="middle" className="text-xs font-bold" fill="#1e293b">R₅</text>
+                    <text x="340" y="340" textAnchor="middle" className="text-[10px] font-mono fill-slate-400">{r5}Ω</text>
                   </g>
 
                   <text x="100" y="90" className="terminal-label">a</text>
@@ -771,7 +813,9 @@ export default function SimuladorCircuitos({ volverAlMenu }: SimuladorCircuitosP
                 <span>I₁ (R₂) = I₃ (R₃) + I₂ (R₁₄₅) ➔ {resultados.iTotal.toFixed(3)} A = {resultados.iR3.toFixed(3)} A + {resultados.iR1.toFixed(3)} A</span>
               )
             ) : (
-              cortocircuitoB ? (
+              llaveB ? (
+                <span>⚠️ Llave cerrada (Cortocircuito) → I(Llave) = I_total = {resultados.iTotal.toFixed(3)} A | I(R₂, R₃, R₄, R₅) = 0 A ✓</span>
+              ) : cortocircuitoB ? (
                 <span>⚠️ Cortocircuito en {rCortaB} → I({rCortaB}) = I_total = {iRCortaB.toFixed(3)} A | I({rAbiertaB}) = 0 A → {resultados.iTotal.toFixed(3)} A = {iRCortaB.toFixed(3)} A + 0.000 A ✓</span>
               ) : (
                 <span>I_total = I_rama₂ (R₂) + I_rama₃ (R₃) ➔ {resultados.iTotal.toFixed(3)} A = {resultados.iR2.toFixed(3)} A + {resultados.iR3.toFixed(3)} A</span>
