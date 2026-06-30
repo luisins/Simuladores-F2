@@ -446,14 +446,21 @@ export default function SimuladorMetal({ volverAlMenu }: SimuladorMetalProps) {
               <h2 className="font-display font-bold text-lg text-slate-200">Simulación del flujo de electrones</h2>
             </div>
 
-            <div className="flex flex-col md:flex-row items-center gap-4 py-4">
-              <div className="bg-emerald-500/10 border border-emerald-500 text-emerald-400 font-bold text-xs py-2 px-4 rounded-xl min-w-[100px] text-center shadow-md shadow-emerald-500/5">
+            <div className="flex flex-col md:flex-row items-center gap-3 md:gap-4 py-4 w-full">
+              {/* Mobile Labels (Above tube) */}
+              <div className="flex justify-between w-full md:hidden px-1">
+                <div className="text-emerald-400 font-bold text-[10px] bg-emerald-500/10 border border-emerald-500/30 px-3 py-1.5 rounded-lg shadow-sm">+ Ánodo</div>
+                <div className="text-red-400 font-bold text-[10px] bg-red-500/10 border border-red-500/30 px-3 py-1.5 rounded-lg shadow-sm">- Cátodo</div>
+              </div>
+
+              {/* Desktop Label Left */}
+              <div className="hidden md:block bg-emerald-500/10 border border-emerald-500 text-emerald-400 font-bold text-xs py-2 px-4 rounded-xl min-w-[100px] text-center shadow-md">
                 + <br /> Ánodo (+)
               </div>
 
               {/* Simulated Conductor Tube */}
               <div
-                className="flex-1 h-14 rounded-full relative overflow-hidden shadow-inner border border-white/5"
+                className="w-full md:flex-1 h-12 md:h-14 rounded-full relative overflow-hidden shadow-inner border border-white/5"
                 style={{
                   background: `linear-gradient(180deg, ${mat.colorGrad1}55 0%, ${mat.colorGrad2}66 60%, ${mat.colorGrad1}44 100%)`,
                   boxShadow: 'inset 0 4px 10px rgba(0,0,0,0.5)'
@@ -486,7 +493,8 @@ export default function SimuladorMetal({ volverAlMenu }: SimuladorMetalProps) {
                 ))}
               </div>
 
-              <div className="bg-red-500/10 border border-red-500 text-red-400 font-bold text-xs py-2 px-4 rounded-xl min-w-[100px] text-center shadow-md shadow-red-500/5">
+              {/* Desktop Label Right */}
+              <div className="hidden md:block bg-red-500/10 border border-red-500 text-red-400 font-bold text-xs py-2 px-4 rounded-xl min-w-[100px] text-center shadow-md">
                 - <br /> Cátodo (-)
               </div>
             </div>
