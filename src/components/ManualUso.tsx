@@ -154,6 +154,13 @@ export default function ManualUso({ tipo = "metal", onClose }: ManualUsoProps) {
                       <strong>Navegación paso a paso:</strong> Revisa el bloque inferior para ver la simplificación matemática de tu circuito. Puedes avanzar o retroceder paso a paso para estudiar el origen matemático del resultado.
                     </p>
                   </div>
+
+                  <div className="flex gap-4 items-start">
+                    <span className="w-6 h-6 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold text-xs flex-shrink-0 mt-0.5">4</span>
+                    <p>
+                      <strong>Inversión de polaridad:</strong> Si reduces el voltaje de la batería por debajo de 0V, los polos se invertirán visualmente (+ abajo, - arriba). La corriente empezará a fluir en sentido opuesto, reflejándose instantáneamente en todas las animaciones del circuito.
+                    </p>
+                  </div>
                 </div>
               </div>
             )
@@ -283,6 +290,13 @@ export default function ManualUso({ tipo = "metal", onClose }: ManualUsoProps) {
                     <span className="font-bold text-indigo-900 block mb-1">↺ Representación visual de corriente negativa</span>
                     <p className="text-indigo-800">
                       Cuando una corriente de rama resulta negativa, el simulador muestra un <strong>círculo amarillo con flecha (↺)</strong> sobre esa rama del diagrama. Este ícono indica que el flujo animado visible es el sentido supuesto, pero la corriente física real circula en dirección contraria. El valor numérico aparece en color naranja en los resultados con la indicación "🔀 Sentido opuesto al supuesto".
+                    </p>
+                  </div>
+
+                  <div className="bg-emerald-50 border-l-4 border-emerald-500 p-4 rounded-r-xl">
+                    <span className="font-bold text-emerald-900 block mb-1">🔋 Fuentes invertidas (Voltaje Negativo)</span>
+                    <p className="text-emerald-800">
+                      Puedes asignar voltajes negativos a las fuentes. Esto invierte visualmente los polos de la batería en el esquema y matemáticamente introduce un valor negativo en la matriz de Cramer, simulando que se conectó la batería al revés.
                     </p>
                   </div>
 

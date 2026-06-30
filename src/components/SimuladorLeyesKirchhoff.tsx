@@ -124,7 +124,7 @@ export default function SimuladorLeyesKirchhoff({ volverAlMenu }: SimuladorLeyes
         icon: "🔋",
         value: eVals[name],
         setValue: eSetters[name],
-        min: 1,
+        min: -40,
         max: 40,
         unit: "V",
         params: [
@@ -302,12 +302,12 @@ export default function SimuladorLeyesKirchhoff({ volverAlMenu }: SimuladorLeyes
                   <rect x="25" y="195" width="70" height="60" className="resistor-bg" />
                   <rect x="35" y="205" width="50" height="40" rx="6" fill="#3b82f6" stroke="#1e293b" strokeWidth="2" />
                   {/* Polarity markers */}
-                  <circle cx="60" cy="195" r="7" fill="#ef4444" className="stroke-white" strokeWidth="1" />
-                  <text x="60" y="198" textAnchor="middle" fill="white" className="text-[10px] font-black font-sans">+</text>
-                  <circle cx="60" cy="255" r="7" fill="#3b82f6" className="stroke-white" strokeWidth="1" />
-                  <text x="60" y="258" textAnchor="middle" fill="white" className="text-[10px] font-black font-sans">-</text>
+                  <circle cx="60" cy="195" r="7" fill={e1 >= 0 ? "#ef4444" : "#3b82f6"} className="stroke-white" strokeWidth="1" />
+                  <text x="60" y="198" textAnchor="middle" fill="white" className="text-[10px] font-black font-sans">{e1 >= 0 ? "+" : "-"}</text>
+                  <circle cx="60" cy="255" r="7" fill={e1 >= 0 ? "#3b82f6" : "#ef4444"} className="stroke-white" strokeWidth="1" />
+                  <text x="60" y="258" textAnchor="middle" fill="white" className="text-[10px] font-black font-sans">{e1 >= 0 ? "-" : "+"}</text>
 
-                  <text x="60" y="228" textAnchor="middle" fill="white" className="font-mono text-xs font-bold">{e1}V</text>
+                  <text x="60" y="228" textAnchor="middle" fill="white" className="font-mono text-xs font-bold">{Math.abs(e1)}V</text>
                   <text x="60" y="242" textAnchor="middle" fill="white" className="text-[8px] font-bold">E₁</text>
                 </g>
 
@@ -316,12 +316,12 @@ export default function SimuladorLeyesKirchhoff({ volverAlMenu }: SimuladorLeyes
                   <rect x="225" y="210" width="70" height="60" className="resistor-bg" />
                   <rect x="235" y="220" width="50" height="40" rx="6" fill="#3b82f6" stroke="#1e293b" strokeWidth="2" />
                   {/* Polarity markers */}
-                  <circle cx="260" cy="210" r="7" fill="#ef4444" className="stroke-white" strokeWidth="1" />
-                  <text x="260" y="213" textAnchor="middle" fill="white" className="text-[10px] font-black font-sans">+</text>
-                  <circle cx="260" cy="270" r="7" fill="#3b82f6" className="stroke-white" strokeWidth="1" />
-                  <text x="260" y="273" textAnchor="middle" fill="white" className="text-[10px] font-black font-sans">-</text>
+                  <circle cx="260" cy="210" r="7" fill={e2 >= 0 ? "#ef4444" : "#3b82f6"} className="stroke-white" strokeWidth="1" />
+                  <text x="260" y="213" textAnchor="middle" fill="white" className="text-[10px] font-black font-sans">{e2 >= 0 ? "+" : "-"}</text>
+                  <circle cx="260" cy="270" r="7" fill={e2 >= 0 ? "#3b82f6" : "#ef4444"} className="stroke-white" strokeWidth="1" />
+                  <text x="260" y="273" textAnchor="middle" fill="white" className="text-[10px] font-black font-sans">{e2 >= 0 ? "-" : "+"}</text>
 
-                  <text x="260" y="243" textAnchor="middle" fill="white" className="font-mono text-xs font-bold">{e2}V</text>
+                  <text x="260" y="243" textAnchor="middle" fill="white" className="font-mono text-xs font-bold">{Math.abs(e2)}V</text>
                   <text x="260" y="255" textAnchor="middle" fill="white" className="text-[8px] font-bold">E₂</text>
                 </g>
 
@@ -330,12 +330,12 @@ export default function SimuladorLeyesKirchhoff({ volverAlMenu }: SimuladorLeyes
                   <rect x="455" y="195" width="70" height="60" className="resistor-bg" />
                   <rect x="465" y="205" width="50" height="40" rx="6" fill="#3b82f6" stroke="#1e293b" strokeWidth="2" />
                   {/* Polarity markers */}
-                  <circle cx="490" cy="195" r="7" fill="#ef4444" className="stroke-white" strokeWidth="1" />
-                  <text x="490" y="198" textAnchor="middle" fill="white" className="text-[10px] font-black font-sans">+</text>
-                  <circle cx="490" cy="255" r="7" fill="#3b82f6" className="stroke-white" strokeWidth="1" />
-                  <text x="490" y="258" textAnchor="middle" fill="white" className="text-[10px] font-black font-sans">-</text>
+                  <circle cx="490" cy="195" r="7" fill={e3 >= 0 ? "#ef4444" : "#3b82f6"} className="stroke-white" strokeWidth="1" />
+                  <text x="490" y="198" textAnchor="middle" fill="white" className="text-[10px] font-black font-sans">{e3 >= 0 ? "+" : "-"}</text>
+                  <circle cx="490" cy="255" r="7" fill={e3 >= 0 ? "#3b82f6" : "#ef4444"} className="stroke-white" strokeWidth="1" />
+                  <text x="490" y="258" textAnchor="middle" fill="white" className="text-[10px] font-black font-sans">{e3 >= 0 ? "-" : "+"}</text>
 
-                  <text x="490" y="228" textAnchor="middle" fill="white" className="font-mono text-xs font-bold">{e3}V</text>
+                  <text x="490" y="228" textAnchor="middle" fill="white" className="font-mono text-xs font-bold">{Math.abs(e3)}V</text>
                   <text x="490" y="242" textAnchor="middle" fill="white" className="text-[8px] font-bold">E₃</text>
                 </g>
 
@@ -507,17 +507,24 @@ export default function SimuladorLeyesKirchhoff({ volverAlMenu }: SimuladorLeyes
                 Utilizando los teoremas fundamentales de Kirchhoff y resolviendo para las dos mallas mediante determinantes de Cramer:
               </p>
 
+              {(e1 < 0 || e2 < 0 || e3 < 0) && (
+                <div className="bg-amber-50 border border-amber-200 text-amber-800 font-sans text-xs p-3 rounded-xl flex items-center gap-2">
+                  <span className="text-lg">🔀</span>
+                  <p><strong>Polaridad Invertida:</strong> Hay al menos una fuente con voltaje negativo. Su polaridad física está invertida respecto al esquema original. El sistema compensa algebraicamente este signo.</p>
+                </div>
+              )}
+
               <div className="space-y-3 font-mono text-xs">
                 <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
                   <h4 className="font-extrabold text-slate-800 text-xs mb-1.5">Malla I (Izquierda)</h4>
                   <code>-I₀·(R₁ + R₄) + I₁·R₃ = E₂ - E₁</code><br />
-                  <span>-I₀·({R14}) + I₁·{R3} = {e2 - e1} V</span>
+                  <span>-I₀·({R14}) + I₁·{R3} = ({e2}) - ({e1}) = {e2 - e1} V</span>
                 </div>
 
                 <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
                   <h4 className="font-extrabold text-slate-800 text-xs mb-1.5">Malla II (Derecha)</h4>
                   <code>-I₀·(R₂ + R₅) - I₁·(R₃ + R₂ + R₅) = -(E₂ + E₃)</code><br />
-                  <span>-I₀·({R25}) - I₁·({R3 + R25}) = -{e2 + e3} V</span>
+                  <span>-I₀·({R25}) - I₁·({R3 + R25}) = -({e2} + ({e3})) = {-(e2 + e3)} V</span>
                 </div>
 
                 <div className="bg-indigo-50/50 p-4 rounded-xl border border-indigo-100 space-y-2">
@@ -525,8 +532,9 @@ export default function SimuladorLeyesKirchhoff({ volverAlMenu }: SimuladorLeyes
                   <div className="bg-indigo-50 px-3 py-1.5 rounded inline-block font-bold">
                     D = (R₁₄ · (R₃ + R₂₅)) + (R₃ · R₂₅) = {D.toFixed(1)}
                   </div>
-                  <div className="text-[10px] text-slate-500">
-                    DI₀ = {DI0.toFixed(2)} | DI₁ = {DI1.toFixed(2)}
+                  <div className="text-[10px] text-slate-500 mt-2">
+                    DI₀ = ({e2 - e1})·(-{R3 + R25}) - ({R3})·({-(e2 + e3)}) = {DI0.toFixed(1)}<br/>
+                    DI₁ = (-{R14})·({-(e2 + e3)}) - ({e2 - e1})·(-{R25}) = {DI1.toFixed(1)}
                   </div>
                 </div>
               </div>

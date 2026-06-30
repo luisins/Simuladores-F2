@@ -720,7 +720,14 @@ export default function SimuladorCircuitos({ volverAlMenu }: SimuladorCircuitosP
         </section>
 
         {/* Analytical numerical results card deck */}
-        <section className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <section className="space-y-4">
+          {voltaje < 0 && (
+            <div className="bg-amber-50 border border-amber-200 text-amber-800 font-sans text-xs px-4 py-3 rounded-2xl flex items-center gap-2">
+              <span className="text-lg">🔀</span>
+              <p><strong>Polaridad Invertida:</strong> Has ajustado un voltaje negativo. El sentido de la corriente ahora es el opuesto al inicial.</p>
+            </div>
+          )}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="bg-white border rounded-2xl p-5 shadow-sm border-l-4 border-indigo-600 flex items-center gap-5">
             <span className="text-3xl text-indigo-600 font-mono">Ω</span>
             <div>
@@ -739,6 +746,7 @@ export default function SimuladorCircuitos({ volverAlMenu }: SimuladorCircuitosP
                 {resultados.iTotal.toFixed(3)} <span className="text-xs text-slate-400 font-medium">A</span>
               </strong>
             </div>
+          </div>
           </div>
         </section>
 
